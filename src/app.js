@@ -15,3 +15,26 @@ app.listen(8080, () => {
 });
 
 //Code by Juan Manuel Eiroa :)
+
+/*"title": "Oculus VR",
+  "description": "Equipo Oculus VR de Sony para Realidad Virtual",
+  "code": "OCVR",
+  "price": 200000,
+  "status": true,
+  "stock": 5,
+  "category": "VR",
+  "thumbnail": "Sin imagen"
+  */
+
+
+  /*
+{
+    "title": "Nintendo Switch",
+    "description": "Consola Switch de Nintendo. Color blanco. Capacidad de almacenamiento de 1 TB. Incluye consola portátil, estuche portátil y 2 controles",
+    "price": 200000,
+    "thumbnail": "Sin imagen",
+    "code": "SWI",
+    "stock": 30,
+    "id": 10
+  }
+*/

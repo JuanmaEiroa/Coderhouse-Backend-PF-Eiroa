@@ -17,7 +17,16 @@ export default class ProductManager {
   }
 
   //Función asíncrona para agregar el producto y guardarlo en archivo
-  async addProduct(title, description, code, price, status, stock, category, thumbnail) {
+  async addProduct(
+    title,
+    description,
+    code,
+    price,
+    status,
+    stock,
+    category,
+    thumbnail
+  ) {
     try {
       let product = {
         title,
@@ -30,7 +39,15 @@ export default class ProductManager {
         thumbnail,
         id: this.#getId(),
       };
-      if (!title || !description || !price || !code || !status || !stock || !category) {
+      if (
+        !title ||
+        !description ||
+        !code ||
+        !price ||
+        !status ||
+        !stock ||
+        !category
+      ) {
         console.log("Error: Todos los campos deben ser completados");
       } else {
         let foundCode = false;
@@ -75,7 +92,7 @@ export default class ProductManager {
       );
 
       return productList.find((prod) => {
-       return prod.id === id;
+        return prod.id === id;
       });
     } catch (err) {
       console.log(`Error al obtener el producto por ID: ${err}`);
@@ -112,6 +129,4 @@ export default class ProductManager {
   }
 }
 
-
 //Code by Juan Manuel Eiroa :)
-
