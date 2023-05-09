@@ -21,4 +21,19 @@ cartsRouter.get("/", async (req, res) => {
   }
 });
 
+cartsRouter.get("/:pid", async (req, res) => {
+  try {
+    let cartFound = await cartsManager.getCartById(
+      parseInt(req.params.pid) //Método para obtener un carrito según un id, indicándolo como req.param
+    );
+    if (cartFound != undefined) {
+      res.send(cartFound); //Si el id existe, se muestra el carrito que se buscaba
+    } else {
+      res.status(400).send(`No existe ese ID`); //Si el id no existe, se muestra un error
+    }
+  } catch (err) {
+    res.status(400).send(`Hubo un error al buscar por ID: ${err}`);
+  }
+});
+
 export { cartsRouter };

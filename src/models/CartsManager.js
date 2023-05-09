@@ -1,21 +1,21 @@
 import * as fs from "fs";
 
 export default class CartsManager {
-  //Declaración de variable y funciones para obtención automática del id por producto ingresado
+  //Declaración de variable y funciones para obtención automática del id por carrito ingresado
   #lastCartID = 0;
 
   //Obtención del último ID de la lista, obteniendo el máximo encontrado
   async #getLastId() {
-    let productList = JSON.parse(
+    let cartList = JSON.parse(
       await fs.promises.readFile(this.path, "utf-8")
     );
-    let oldIds = await productList.map((prod) => prod.id);
+    let oldIds = await cartList.map((prod) => prod.id);
     if (oldIds.length > 0) {
       return (this.#lastCartID = Math.max(...oldIds));
     }
   }
 
-  //Asignación del nuevo ID al producto a agregar
+  //Asignación del nuevo ID al carrito a agregar
   async #getNewId() {
     await this.#getLastId();
     this.#lastCartID++;
@@ -51,6 +51,20 @@ export default class CartsManager {
       return cartList;
     } catch (err) {
       console.log(`Error al obtener los carritos: ${err}`);
+    }
+  }
+
+  async getCartById(id) {
+    try {
+      let cartList = JSON.parse(
+        await fs.promises.readFile(this.path, "utf-8")
+      );
+
+      return cartList.find((cart) => {
+        return cart.id === id;
+      });
+    } catch (err) {
+      console.log(`Error al obtener el carrito por ID: ${err}`);
     }
   }
 }
