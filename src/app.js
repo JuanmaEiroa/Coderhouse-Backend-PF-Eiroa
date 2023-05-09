@@ -8,7 +8,7 @@ const app = express(); //Creación del servidor en la constante app
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //Uso de middleware para parsear los datos de la petición.
 
-app.use("/api/products", productsRouter);
+app.use("/api/products", productsRouter); //Uso de los middleware de routing para determinar las rutas a usar por la aplicación
 
 app.listen(8080, () => {
   console.log("Listening in 8080"); //Check de que el servidor se encuentra funcionando en el puerto 8080.
@@ -16,6 +16,10 @@ app.listen(8080, () => {
 
 //Code by Juan Manuel Eiroa :)
 
+
+//TESTS
+
+//TEST METODO POST
 /*"title": "Oculus VR",
   "description": "Equipo Oculus VR de Sony para Realidad Virtual",
   "code": "OCVR",
@@ -26,7 +30,10 @@ app.listen(8080, () => {
   "thumbnail": "Sin imagen"
   */
 
+  //TEST METODO PUT
+  /*{"title": "New Product", "description": "This is the New Product"}
 
+ //TEST METODO DELETE 
   /*
 {
     "title": "Nintendo Switch",

@@ -1,10 +1,11 @@
 import * as fs from "fs";
 
 export default class ProductManager {
-  //Declaración de variables para obtención automática del id por producto ingresado
+  //Declaración de variable y funciones para obtención automática del id por producto ingresado
   #lastProdID = 0;
 
-  async getLastId() {
+  //Obtención del último ID de la lista, obteniendo el máximo encontrado
+  async #getLastId() {
     let productList = JSON.parse(
       await fs.promises.readFile(this.path, "utf-8")
     );
@@ -14,8 +15,9 @@ export default class ProductManager {
     }
   }
 
+  //Asignación del nuevo ID al producto a agregar
   async #getNewId() {
-    await this.getLastId();
+    await this.#getLastId();
     this.#lastProdID++;
     return this.#lastProdID;
   }
@@ -28,63 +30,7 @@ export default class ProductManager {
     }
   }
 
-  //Función asíncrona PREVIA para agregar el producto y guardarlo en archivo
-  /*async addProduct(
-    title,
-    description,
-    code,
-    price,
-    status,
-    stock,
-    category,
-    thumbnail
-  ) {
-    try {
-      let product = {
-        title,
-        description,
-        code,
-        price,
-        status: true,
-        stock,
-        category,
-        thumbnail,
-        id: this.#getNewId(),
-      };
-      if (
-        !title ||
-        !description ||
-        !code ||
-        !price ||
-        !status ||
-        !stock ||
-        !category
-      ) {
-        console.log("Error: Todos los campos deben ser completados");
-      } else {
-        let foundCode = false;
-        let productList = JSON.parse(
-          await fs.promises.readFile(this.path, "utf-8")
-        );
-        productList.forEach((prod) => {
-          if (prod.code === code) {
-            foundCode = true;
-          }
-        });
-        if (!foundCode) {
-          productList.push(product);
-          await fs.promises.writeFile(this.path, JSON.stringify(productList));
-          return;
-        } else {
-          console.log("Error: El código de producto ya existe");
-        }
-      }
-    } catch (err) {
-      console.log(`Error al agregar el producto: ${err}`);
-    }
-  }*/
-
-  //Función asíncrona NUEVA para agregar el producto y guardarlo en el archivo
+  //Función asíncrona para agregar el producto y guardarlo en el archivo
   async addProduct(product) {
     try {
       if (
@@ -149,14 +95,16 @@ export default class ProductManager {
   }
 
   //Función asíncrona para actualizar un producto por ID desde el archivo
-  async updateProduct(id, key, value) {
+  async updateProduct(id, changes) {
     try {
       let productList = JSON.parse(
         await fs.promises.readFile(this.path, "utf-8")
       );
-      let newProduct = await productList.findIndex((prod) => prod.id === id);
-      productList[newProduct][key] = value;
-      await fs.promises.writeFile(this.path, JSON.stringify(productList));
+      let prodIndex = await productList.findIndex((prod) => prod.id === id);
+      if (prodIndex !== -1) {
+        productList[prodIndex] = { ...productList[prodIndex], ...changes };
+        await fs.promises.writeFile(this.path, JSON.stringify(productList));
+      }
     } catch (err) {
       console.log(`Error al actualizar el producto por ID: ${err}`);
     }

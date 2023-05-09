@@ -33,25 +33,25 @@ productsRouter.get("/:pid", async (req, res) => {
 productsRouter.post("/", async (req, res) => {
   try {
     const product = req.body;
-    res.status(201).send(await productManager.addProduct(product));
+    res.status(201).send(await productManager.addProduct(product)); //Método para agregar un producto a la lista, utilizando lo escrito en el body del request.
   } catch (err) {
     res.status(400).send(`Hubo un error al agregar el producto: ${err}`);
   }
 });
 
-productsRouter.put("/:pid", async (req,res) => {
+productsRouter.put("/:pid", async (req, res) => {
   try {
-    
+    res.send(await productManager.updateProduct(parseInt(req.params.pid), req.body))
   } catch (err) {
-    
+    res.status(400).send(`Hubo un error al actualizar el producto por ID ${err}`)
   }
-})
+});
 
 productsRouter.delete("/:pid", async (req, res) => {
   try {
-    res.send(await productManager.deleteProduct(parseInt(req.params.pid)));
+    res.send(await productManager.deleteProduct(parseInt(req.params.pid))); //Método para eliminar un producto de la lista, buscándolo por ID (escrito en los params)
   } catch (err) {
-    res.status(400).send(`Hubo un error al borrar el producto: ${err}`);
+    res.status(400).send(`Hubo un error al borrar el producto por ID: ${err}`);
   }
 });
 
