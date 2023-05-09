@@ -2,10 +2,22 @@ import * as fs from "fs";
 
 export default class ProductManager {
   //Declaración de variables para obtención automática del id por producto ingresado
-  #prodID = 0;
-  #getId() {
-    this.#prodID++;
-    return this.#prodID;
+  #lastProdID = 0;
+
+  async getLastId() {
+    let productList = JSON.parse(
+      await fs.promises.readFile(this.path, "utf-8")
+    );
+    let oldIds = await productList.map((prod) => prod.id);
+    if (oldIds.length > 0) {
+      return (this.#lastProdID = Math.max(...oldIds));
+    }
+  }
+
+  async #getNewId() {
+    await this.getLastId();
+    this.#lastProdID++;
+    return this.#lastProdID;
   }
 
   //Método constructor del array principal del ProductManager
@@ -16,8 +28,8 @@ export default class ProductManager {
     }
   }
 
-  //Función asíncrona para agregar el producto y guardarlo en archivo
-  async addProduct(
+  //Función asíncrona PREVIA para agregar el producto y guardarlo en archivo
+  /*async addProduct(
     title,
     description,
     code,
@@ -37,7 +49,7 @@ export default class ProductManager {
         stock,
         category,
         thumbnail,
-        id: this.#getId(),
+        id: this.#getNewId(),
       };
       if (
         !title ||
@@ -60,6 +72,43 @@ export default class ProductManager {
           }
         });
         if (!foundCode) {
+          productList.push(product);
+          await fs.promises.writeFile(this.path, JSON.stringify(productList));
+          return;
+        } else {
+          console.log("Error: El código de producto ya existe");
+        }
+      }
+    } catch (err) {
+      console.log(`Error al agregar el producto: ${err}`);
+    }
+  }*/
+
+  //Función asíncrona NUEVA para agregar el producto y guardarlo en el archivo
+  async addProduct(product) {
+    try {
+      if (
+        !product.title ||
+        !product.description ||
+        !product.code ||
+        !product.price ||
+        !product.status ||
+        !product.stock ||
+        !product.category
+      ) {
+        console.log("Error: Todos los campos deben ser completados");
+      } else {
+        let foundCode = false;
+        let productList = JSON.parse(
+          await fs.promises.readFile(this.path, "utf-8")
+        );
+        productList.forEach((prod) => {
+          if (prod.code === product.code) {
+            foundCode = true;
+          }
+        });
+        if (!foundCode) {
+          product.id = await this.#getNewId();
           productList.push(product);
           await fs.promises.writeFile(this.path, JSON.stringify(productList));
           return;

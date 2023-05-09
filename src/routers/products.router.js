@@ -16,10 +16,9 @@ productsRouter.get("/", async (req, res) => {
 });
 
 productsRouter.get("/:pid", async (req, res) => {
-  //Endpoint para obtener un producto según un id, indicándolo como req.param
   try {
     let productFound = await productManager.getProductById(
-      parseInt(req.params.pid)
+      parseInt(req.params.pid) //Método para obtener un producto según un id, indicándolo como req.param
     );
     if (productFound != undefined) {
       res.send(productFound); //Si el id existe, se muestra el producto que se buscaba
@@ -31,24 +30,29 @@ productsRouter.get("/:pid", async (req, res) => {
   }
 });
 
-/*productsRouter.post("/", async (req, res) => {
+productsRouter.post("/", async (req, res) => {
   try {
     const product = req.body;
-    console.log(await productManager.addProduct(product));
-    //res.send(await productManager.addProduct(product));
-
+    res.status(201).send(await productManager.addProduct(product));
   } catch (err) {
     res.status(400).send(`Hubo un error al agregar el producto: ${err}`);
   }
 });
-*/
+
+productsRouter.put("/:pid", async (req,res) => {
+  try {
+    
+  } catch (err) {
+    
+  }
+})
 
 productsRouter.delete("/:pid", async (req, res) => {
-    try {
-        res.send(await productManager.deleteProduct(parseInt(req.params.pid)))
-    } catch (error) {
-        res.status(400).send(`Hubo un error al borrar el producto: ${err}`);
-    }
-})
+  try {
+    res.send(await productManager.deleteProduct(parseInt(req.params.pid)));
+  } catch (err) {
+    res.status(400).send(`Hubo un error al borrar el producto: ${err}`);
+  }
+});
 
 export { productsRouter };
