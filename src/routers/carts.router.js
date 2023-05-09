@@ -6,7 +6,7 @@ const cartsRouter = Router();
 
 cartsRouter.post("/", async (req, res) => {
   try {
-    const cart = req.body;
+    const cart = {"products":[]};
     res.status(201).send(await cartsManager.addCart(cart));
   } catch (err) {
     res.status(400).send(`Hubo un error al agregar el carrito: ${err}`);
@@ -21,10 +21,10 @@ cartsRouter.get("/", async (req, res) => {
   }
 });
 
-cartsRouter.get("/:pid", async (req, res) => {
+cartsRouter.get("/:cid", async (req, res) => {
   try {
     let cartFound = await cartsManager.getCartById(
-      parseInt(req.params.pid) //Método para obtener un carrito según un id, indicándolo como req.param
+      parseInt(req.params.cid) //Método para obtener un carrito según un id, indicándolo como req.param
     );
     if (cartFound != undefined) {
       res.send(cartFound); //Si el id existe, se muestra el carrito que se buscaba
@@ -33,6 +33,23 @@ cartsRouter.get("/:pid", async (req, res) => {
     }
   } catch (err) {
     res.status(400).send(`Hubo un error al buscar por ID: ${err}`);
+  }
+});
+
+cartsRouter.post("/:cid/product/:pid", async (req, res) => {
+  try {
+    res
+      .status(201)
+      .send(
+        await cartsManager.addProdtoCart(
+          parseInt(req.params.cid),
+          parseInt(req.params.pid)
+        )
+      );
+  } catch (err) {
+    res
+      .status(400)
+      .send(`Hubo un error al agregar el producto al carrito por ID: ${err}`);
   }
 });
 
