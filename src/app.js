@@ -20,33 +20,3 @@ app.listen(8080, () => {
 });
 
 //Code by Juan Manuel Eiroa :)
-
-
-//TESTS
-
-//TEST METODO POST
-/*"title": "Oculus VR",
-  "description": "Equipo Oculus VR de Sony para Realidad Virtual",
-  "code": "OCVR",
-  "price": 200000,
-  "status": true,
-  "stock": 5,
-  "category": "VR",
-  "thumbnail": "Sin imagen"
-  */
-
-  //TEST METODO PUT
-  /*{"title": "New Product", "description": "This is the New Product"}
-
- //TEST METODO DELETE 
-  /*
-{
-    "title": "Nintendo Switch",
-    "description": "Consola Switch de Nintendo. Color blanco. Capacidad de almacenamiento de 1 TB. Incluye consola portátil, estuche portátil y 2 controles",
-    "price": 200000,
-    "thumbnail": "Sin imagen",
-    "code": "SWI",
-    "stock": 30,
-    "id": 10
-  }
-*/
