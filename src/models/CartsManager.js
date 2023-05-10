@@ -109,4 +109,19 @@ export default class CartsManager {
       console.log(`Error al agregar el producto al carrito por ID: ${err}`);
     }
   }
+
+  //Método para eliminar un carrito usando id
+  async deleteCart(id) {
+    try {
+      let cartList = JSON.parse(
+        await fs.promises.readFile(this.path, "utf-8")
+      );
+      cartList = await cartList.filter((cart) => {
+        return cart.id !== id;
+      });
+      await fs.promises.writeFile(this.path, JSON.stringify(cartList));
+    } catch (err) {
+      console.log(`Error al borrar el producto por ID: ${err}`);
+    }
+  }
 }

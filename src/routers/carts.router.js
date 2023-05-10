@@ -4,6 +4,7 @@ import CartsManager from "../models/CartsManager.js"; // Importación del produc
 const cartsManager = new CartsManager("./carts.json");
 const cartsRouter = Router();
 
+//Endpoint para generar un carrito
 cartsRouter.post("/", async (req, res) => {
   try {
     const cart = {"products":[]};
@@ -13,6 +14,7 @@ cartsRouter.post("/", async (req, res) => {
   }
 });
 
+//Endpoint para obtener todos los carritos
 cartsRouter.get("/", async (req, res) => {
   try {
     res.send(await cartsManager.getCarts());
@@ -21,6 +23,7 @@ cartsRouter.get("/", async (req, res) => {
   }
 });
 
+//Endpoint para obtener un carrito por id
 cartsRouter.get("/:cid", async (req, res) => {
   try {
     let cartFound = await cartsManager.getCartById(
@@ -36,6 +39,7 @@ cartsRouter.get("/:cid", async (req, res) => {
   }
 });
 
+//Endpoint para agregar un producto a un carrito
 cartsRouter.post("/:cid/product/:pid", async (req, res) => {
   try {
     res
@@ -52,5 +56,14 @@ cartsRouter.post("/:cid/product/:pid", async (req, res) => {
       .send(`Hubo un error al agregar el producto al carrito por ID: ${err}`);
   }
 });
+
+//Endpoint para eliminar un carrito por id
+cartsRouter.delete("/:cid", async(req,res)=>{
+  try {
+    res.send(await cartsManager.deleteCart(parseInt(req.params.cid)))
+  } catch (err) {
+    res.status(400).send(`Hubo un error al eliminar el carrito por ID: ${err}`)
+  }
+})
 
 export { cartsRouter };
