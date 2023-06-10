@@ -1,58 +1,51 @@
 import { Router } from "express";
-import ProductManager from "../models/ProductManager.js"; // Importación del productManager previamente creado para la creación y obtención de productos
+import productManager from "../dao/dbmanagers/product.manager.js";
+import { io } from "../utils.js";
 
-const productManager = new ProductManager("./products.json"); //Creación de una nueva instancia del productManager, usando como ruta ./products.json para la creación del archivo de productos.
-const productsRouter = Router(); //Asignación del middleware Router para la creación de rutas
+const productRouter = Router();
 
-productsRouter.get("/", async (req, res) => {
-  //Endpoint para mostrar productos
-  let productList = await productManager.getProducts(); //Se obtiene el array de productos.
-  let productLimit = req.query.limit; //Se obtiene el límite de productos (en caso de haber sido definido) a mostrar.
-  if (productLimit) {
-    res.send(await productList.slice(0, productLimit)); //En caso de definir un límite de productos como req.query, se mostrarán esa cantidad
-  } else {
-    res.send(productList); // En caso de que no se defina un req.query, se mostrarán todos los productos de la lista.
-  }
-});
-
-productsRouter.get("/:pid", async (req, res) => {
+productRouter.get("/", async (req, res) => {
   try {
-    let productFound = await productManager.getProductById(
-      parseInt(req.params.pid) //Método para obtener un producto según un id, indicándolo como req.param
-    );
-    if (productFound != undefined) {
-      res.send(productFound); //Si el id existe, se muestra el producto que se buscaba
-    } else {
-      res.status(400).send(`No existe ese ID`); //Si el id no existe, se muestra un error
-    }
+    res.status(200).send(await productManager.getProducts());
   } catch (err) {
-    res.status(400).send(`Hubo un error al buscar por ID: ${err}`);
+    res.status(400).send(err);
   }
 });
 
-productsRouter.post("/", async (req, res) => {
+productRouter.get("/:pid", async (req, res) => {
   try {
-    const product = req.body;
-    res.status(201).send(await productManager.addProduct(product)); //Método para agregar un producto a la lista, utilizando lo escrito en el body del request.
+    res.status(200).send(await productManager.getProductById(req.params.pid));
   } catch (err) {
-    res.status(400).send(`Hubo un error al agregar el producto: ${err}`);
+    res.status(400).send(err);
   }
 });
 
-productsRouter.put("/:pid", async (req, res) => {
+productRouter.post("/", async (req, res) => {
   try {
-    res.send(await productManager.updateProduct(parseInt(req.params.pid), req.body))
+    res.status(201).send(await productManager.addProduct(req.body));
+    io.emit("newProd", req.body);
   } catch (err) {
-    res.status(400).send(`Hubo un error al actualizar el producto por ID ${err}`)
+    res.status(400).send(err);
   }
 });
 
-productsRouter.delete("/:pid", async (req, res) => {
+productRouter.put("/:pid", async (req, res) => {
   try {
-    res.send(await productManager.deleteProduct(parseInt(req.params.pid))); //Método para eliminar un producto de la lista, buscándolo por ID (escrito en los params)
+    res
+      .status(201)
+      .send(await productManager.updateProduct(req.params.pid, req.body));
   } catch (err) {
-    res.status(400).send(`Hubo un error al borrar el producto por ID: ${err}`);
+    res.status(400).send(err);
   }
 });
 
-export { productsRouter };
+productRouter.delete("/:pid", async (req, res) => {
+  try {
+    res.status(200).send(await productManager.deleteProduct(req.params.pid));
+    io.emit("deletedProd", req.params.pid);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+export default productRouter;
