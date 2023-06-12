@@ -65,4 +65,14 @@ cartRouter.delete("/:cid/product/:pid", async (req, res) => {
   }
 });
 
+cartRouter.put("/:cid/product/:pid", async (req, res) => {
+  try {
+    res
+      .status(201)
+      .send(await cartManager.updateProdfromCart(req.params.cid, req.params.pid, req.body));
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 export default cartRouter;

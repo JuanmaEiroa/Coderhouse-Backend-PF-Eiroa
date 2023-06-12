@@ -1,5 +1,4 @@
 import { cartModel } from "../models/cart.model.js";
-import { productModel } from "../models/product.model.js";
 import productManager from "../dbmanagers/product.manager.js";
 
 class CartManager {
@@ -26,7 +25,6 @@ class CartManager {
       { new: true }
     );
   }
-
 
   async addProdtoCart(cid, pid) {
     try {
@@ -57,18 +55,10 @@ class CartManager {
 
   async deleteProdfromCart(cid, pid) {
     try {
-      let selectedCart = await this.getCartById(cid);
-
-      const foundProdInCart = selectedCart.products.findIndex(
-        (prod) => prod.product.toString() === pid.toString()
+      await cartModel.updateOne(
+        { _id: cid },
+        { $pull: { products: { product: pid } } }
       );
-
-      if (foundProdInCart !== -1) {
-        selectedCart.products.splice(foundProdInCart, 1);
-        await this.updateCart(cid, selectedCart);
-      } else {
-        console.log("El producto no se encuentra en el carrito");
-      }
     } catch (err) {
       console.log(`Error al borrar el producto del carrito por ID: ${err}`);
     }
@@ -76,13 +66,23 @@ class CartManager {
 
   async deleteAllProds(cid) {
     try {
-      const selectedCart = await this.getCartById(cid);
-  
-      selectedCart.products = [];
-
-      await selectedCart.save();
+      await cartModel.updateOne(
+        { _id: cid },
+        { $set: { products: [] } }
+      );
     } catch (err) {
-      console.log(`Error borrando los productos del carrito: ${err}`);
+      console.log(`Error al borrar los productos del carrito: ${err}`);
+    }
+  }
+
+  async updateProdfromCart(cid, pid, quantity) {
+    try {
+      await cartModel.updateOne(
+        { _id: cid, "products.product": pid },
+        { $set: { "products.$.quantity": quantity.quantity } }
+      );
+    } catch (err) {
+      console.log(`Error actualizando la cantidad del producto del carrito: ${err}`);
     }
   }
 }
