@@ -9,7 +9,8 @@
     <th>Precio</th>
     <th>Stock</th>
     <th>Categoría</th>
-    {{#each renderProdList}}
+    {{#if isValid}}
+    {{#each docs}}
       <tr>
         <td>{{this._id}}</td>
         <td>{{this.title}}</td>
@@ -21,4 +22,19 @@
       </tr>
     {{/each}}
   </table>
+  <br/>
+<div>
+    {{#if hasPrevPage}}
+        <a href={{this.prevLink}}><< Anterior</a>
+    {{/if}}
+    &nbsp;
+    {{this.page}}
+    &nbsp;
+     {{#if hasNextPage}}
+        <a href={{this.nextLink}}>Siguiente >></a>
+    {{/if}} 
+</div>
+{{else}}
+<h1>No hay productos para mostrar</h1>
+{{/if}}
 </div>
