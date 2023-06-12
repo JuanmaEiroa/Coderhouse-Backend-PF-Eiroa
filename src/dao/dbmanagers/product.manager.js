@@ -5,8 +5,18 @@ class ProductManager {
     this.model = productModel;
   }
 
-  async getProducts() {
-    return await productModel.find().lean();
+  async getProducts(limit, page, sort, query) {
+    const options = {
+      limit: limit || 10,
+      page: page || 1,
+      lean: true,
+    };
+
+    if (sort) {
+      options.sort = sort;
+    }
+
+    return await this.model.paginate(query || {}, options);
   }
 
   async getProductById(pid) {

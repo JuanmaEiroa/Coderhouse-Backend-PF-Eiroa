@@ -11,9 +11,9 @@ cartRouter.get("/", async (req, res) => {
   }
 });
 
-cartRouter.get("/:pid", async (req, res) => {
+cartRouter.get("/:cid", async (req, res) => {
   try {
-    res.status(200).send(await cartManager.getCartById(req.params.pid));
+    res.status(200).send(await cartManager.getCartById(req.params.cid));
   } catch (err) {
     res.status(400).send(err);
   }
@@ -27,7 +27,7 @@ cartRouter.post("/", async (req, res) => {
   }
 });
 
-cartRouter.put("/:pid", async (req, res) => {
+cartRouter.put("/:cid", async (req, res) => {
   try {
     res
       .status(201)
@@ -37,20 +37,32 @@ cartRouter.put("/:pid", async (req, res) => {
   }
 });
 
-cartRouter.delete("/:pid", async (req, res) => {
+cartRouter.delete("/:cid", async (req, res) => {
   try {
-    res.status(200).send(await cartManager.deleteCart(req.params.pid));
+    res.status(200).send(await cartManager.deleteAllProds(req.params.cid));
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-cartRouter.post("/:cid/product/:pid", async (req,res) => {
+cartRouter.post("/:cid/product/:pid", async (req, res) => {
   try {
-    res.status(201).send(await cartManager.addProdtoCart(req.params.cid, req.params.pid))
+    res
+      .status(201)
+      .send(await cartManager.addProdtoCart(req.params.cid, req.params.pid));
   } catch (err) {
     res.status(400).send(err);
   }
-})
+});
+
+cartRouter.delete("/:cid/product/:pid", async (req, res) => {
+  try {
+    res
+      .status(201)
+      .send(await cartManager.deleteProdfromCart(req.params.cid, req.params.pid));
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
 
 export default cartRouter;

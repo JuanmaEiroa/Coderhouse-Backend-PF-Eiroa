@@ -1,4 +1,5 @@
 import { cartModel } from "../models/cart.model.js";
+import { productModel } from "../models/product.model.js";
 import productManager from "../dbmanagers/product.manager.js";
 
 class CartManager {
@@ -26,9 +27,6 @@ class CartManager {
     );
   }
 
-  async deleteCart(cid) {
-    return await cartModel.findByIdAndDelete(cid);
-  }
 
   async addProdtoCart(cid, pid) {
     try {
@@ -54,6 +52,37 @@ class CartManager {
       await this.updateCart(cid, selectedCart);
     } catch (err) {
       console.log(`Error al agregar el producto al carrito por ID: ${err}`);
+    }
+  }
+
+  async deleteProdfromCart(cid, pid) {
+    try {
+      let selectedCart = await this.getCartById(cid);
+
+      const foundProdInCart = selectedCart.products.findIndex(
+        (prod) => prod.product.toString() === pid.toString()
+      );
+
+      if (foundProdInCart !== -1) {
+        selectedCart.products.splice(foundProdInCart, 1);
+        await this.updateCart(cid, selectedCart);
+      } else {
+        console.log("El producto no se encuentra en el carrito");
+      }
+    } catch (err) {
+      console.log(`Error al borrar el producto del carrito por ID: ${err}`);
+    }
+  }
+
+  async deleteAllProds(cid) {
+    try {
+      const selectedCart = await this.getCartById(cid);
+  
+      selectedCart.products = [];
+
+      await selectedCart.save();
+    } catch (err) {
+      console.log(`Error borrando los productos del carrito: ${err}`);
     }
   }
 }

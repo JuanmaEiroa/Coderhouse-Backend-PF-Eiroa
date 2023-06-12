@@ -6,7 +6,14 @@ const productRouter = Router();
 
 productRouter.get("/", async (req, res) => {
   try {
-    res.status(200).send(await productManager.getProducts());
+    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const sort = req.query.sort;
+    const query = req.query.query || {};
+
+    const result = await productManager.getProducts(limit, page, sort, query);
+
+    res.status(200).send(result);
   } catch (err) {
     res.status(400).send(err);
   }
