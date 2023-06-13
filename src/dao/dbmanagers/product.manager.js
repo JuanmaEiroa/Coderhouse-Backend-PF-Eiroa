@@ -5,17 +5,25 @@ class ProductManager {
     this.model = productModel;
   }
 
-  async getProducts(limit = 10, page = 1, category = false, state = false) {
+  async getProducts(limit = 10, page = 1, category = false, status = false, sort = false) {
     let filter = {};
+    let options = { lean: true, page, limit, sort }
 
     if (category) {
-      filter = { category };
+      filter = { ...filter, category };
     }
-    if (state) {
-      filter = { state };
+    if (status) {
+      filter = { ...filter, status };
     }
 
-    return await this.model.paginate(filter, { lean: true, page, limit });
+    if (sort === "asc"){
+      options.sort = {price: 1}
+    }
+    if (sort === "desc"){
+      options.sort = {price: -1}
+    }
+
+    return await this.model.paginate(filter, options);
   }
 
   async getProductById(pid) {

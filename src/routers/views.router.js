@@ -5,15 +5,17 @@ import messageManager from "../dao/dbmanagers/message.manager.js";
 const viewsRouter = Router();
 
 viewsRouter.get("/products", async (req, res) => {
-  const { limit, page, category, state } = req.query;
+  const { limit, page, category, status, sort } = req.query;
   const prodList = await productManager.getProducts(
     limit,
     page,
     category,
-    state
+    status, 
+    sort
   );
   prodList.category = category;
-  console.log(prodList);
+  prodList.status = status;
+  prodList.sort = sort;
   res.render("products", prodList);
 });
 

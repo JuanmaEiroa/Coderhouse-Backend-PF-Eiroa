@@ -21,16 +21,20 @@
       </tr>
     {{/each}}
   </table>
-  <br/>
-<div>
+  <br />
+  <div>
     {{#if hasPrevPage}}
-        <a href="products?limit={{limit}}&page={{prevPage}}">← Anterior</a>
+      <a
+        href="products?limit={{limit}}&page={{prevPage}}&status={{status}}&category={{category}}&sort={{sort}}"
+      >← Anterior</a>
     {{/if}}
     &nbsp;
     {{this.page}}
     &nbsp;
-     {{#if hasNextPage}}
-        <a href="products?limit={{limit}}&page={{nextPage}}">Siguiente →</a>
-    {{/if}} 
-</div>
+    {{#if hasNextPage}}
+      <a
+        href="products?limit={{limit}}&page={{nextPage}}&status={{status}}&category={{category}}&sort={{sort}}"
+      >Siguiente →</a>
+    {{/if}}
+  </div>
 </div>
