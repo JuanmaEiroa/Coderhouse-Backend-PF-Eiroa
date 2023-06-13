@@ -9,7 +9,7 @@
     <th>Precio</th>
     <th>Stock</th>
     <th>Categoría</th>
-    {{#each docs}}
+    {{#each payload}}
       <tr>
         <td>{{this._id}}</td>
         <td>{{this.title}}</td>
@@ -25,7 +25,7 @@
   <div>
     {{#if hasPrevPage}}
       <a
-        href="products?limit={{limit}}&page={{prevPage}}&status={{status}}&category={{category}}&sort={{sort}}"
+        href="{{prevLink}}&limit={{limit}}&availability={{availability}}&category={{category}}&sort={{sort}}"
       >← Anterior</a>
     {{/if}}
     &nbsp;
@@ -33,7 +33,7 @@
     &nbsp;
     {{#if hasNextPage}}
       <a
-        href="products?limit={{limit}}&page={{nextPage}}&status={{status}}&category={{category}}&sort={{sort}}"
+        href="{{nextLink}}&limit={{limit}}&availability={{availability}}&category={{category}}&sort={{sort}}"
       >Siguiente →</a>
     {{/if}}
   </div>
