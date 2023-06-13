@@ -5,30 +5,29 @@ class ProductManager {
     this.model = productModel;
   }
 
-  async getProducts(limit, page, sort, query) {
-    const options = {
-      limit: limit || 10,
-      page: page || 1,
-      lean: true,
-    };
+  async getProducts(limit = 10, page = 1, category = false, state = false) {
+    let filter = {};
 
-    if (sort) {
-      options.sort = sort;
+    if (category) {
+      filter = { category };
+    }
+    if (state) {
+      filter = { state };
     }
 
-    return await this.model.paginate(query || {}, options);
+    return await this.model.paginate(filter, { lean: true, page, limit });
   }
 
   async getProductById(pid) {
-    return await productModel.findById(pid).lean();
+    return await this.model.findById(pid).lean();
   }
 
   async addProduct(product) {
-    return await productModel.create(product);
+    return await this.model.create(product);
   }
 
   async updateProduct(pid, product) {
-    return await productModel.findByIdAndUpdate(
+    return await this.model.findByIdAndUpdate(
       pid,
       { $set: product },
       { new: true }
@@ -36,7 +35,7 @@ class ProductManager {
   }
 
   async deleteProduct(pid) {
-    return await productModel.findByIdAndDelete(pid);
+    return await this.model.findByIdAndDelete(pid);
   }
 }
 
