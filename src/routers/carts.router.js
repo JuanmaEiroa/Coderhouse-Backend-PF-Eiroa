@@ -31,7 +31,7 @@ cartRouter.put("/:cid", async (req, res) => {
   try {
     res
       .status(201)
-      .send(await cartManager.updateCart(req.params.pid, req.body));
+      .send(await cartManager.updateCart(req.params.cid, req.body));
   } catch (err) {
     res.status(400).send(err);
   }
