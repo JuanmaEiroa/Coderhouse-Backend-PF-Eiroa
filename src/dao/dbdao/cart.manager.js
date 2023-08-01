@@ -11,7 +11,7 @@ class CartManager {
   }
 
   async getCartById(cid) {
-    return await cartModel.findById(cid).populate("products.product").lean();
+    return await cartModel.findById(cid).populate("products.product", "-__v").lean();
   }
 
   async addCart(cart) {
@@ -25,6 +25,7 @@ class CartManager {
       { new: true }
     );
   }
+  
 
   async addProdtoCart(cid, pid) {
     try {
@@ -35,7 +36,7 @@ class CartManager {
       let selectedProduct = await productManager.getProductById(pid);
 
       let existingProduct = selectedCart.products.find((prod) => {
-        return prod.product.toString() === selectedProduct._id.toString();
+        return prod.product._id.toString() === selectedProduct._id.toString();
       });
 
       if (existingProduct) {
@@ -52,13 +53,15 @@ class CartManager {
       console.log(`Error al agregar el producto al carrito por ID: ${err}`);
     }
   }
+  
 
-  async deleteProdfromCart(cid, pid) {
+    async deleteProdfromCart(cid, pid) {
     try {
       await cartModel.updateOne(
         { _id: cid },
         { $pull: { products: { product: pid } } }
       );
+      return {success: true, message: "Producto eliminado del carrito"}
     } catch (err) {
       console.log(`Error al borrar el producto del carrito por ID: ${err}`);
     }
@@ -66,10 +69,7 @@ class CartManager {
 
   async deleteAllProds(cid) {
     try {
-      await cartModel.updateOne(
-        { _id: cid },
-        { $set: { products: [] } }
-      );
+      await cartModel.updateOne({ _id: cid }, { $set: { products: [] } });
     } catch (err) {
       console.log(`Error al borrar los productos del carrito: ${err}`);
     }
@@ -82,7 +82,9 @@ class CartManager {
         { $set: { "products.$.quantity": quantity.quantity } }
       );
     } catch (err) {
-      console.log(`Error actualizando la cantidad del producto del carrito: ${err}`);
+      console.log(
+        `Error actualizando la cantidad del producto del carrito: ${err}`
+      );
     }
   }
 }
