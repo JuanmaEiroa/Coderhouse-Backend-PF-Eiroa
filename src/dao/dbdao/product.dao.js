@@ -1,11 +1,11 @@
 import { productModel } from "../models/product.model.js";
 
-class ProductManager {
+export default class ProductMongoDAO {
   constructor() {
-    this.model = productModel;
+    this.collection = productModel;
   }
 
-  async getProducts(
+  async get(
     limit = 10,
     page = 1,
     category = false,
@@ -33,30 +33,26 @@ class ProductManager {
       options.sort = { price: -1 };
     }
 
-    return await this.model.paginate(filter, options);
+    return await this.collection.paginate(filter, options);
   }
 
-  async getProductById(pid) {
-    return await this.model.findById(pid).lean();
+  async getById(pid) {
+    return await this.collection.findById(pid).lean();
   }
 
-  async addProduct(product) {
-    return await this.model.create(product);
+  async add(product) {
+    return await this.collection.create(product);
   }
 
-  async updateProduct(pid, product) {
-    return await this.model.findByIdAndUpdate(
+  async update(pid, product) {
+    return await this.collection.findByIdAndUpdate(
       pid,
       { $set: product },
       { new: true }
     );
   }
 
-  async deleteProduct(pid) {
-    return await this.model.findByIdAndDelete(pid);
+  async delete(pid) {
+    return await this.collection.findByIdAndDelete(pid);
   }
 }
-
-const productManager = new ProductManager();
-
-export default productManager;

@@ -1,23 +1,19 @@
 import { messageModel } from "../models/message.model.js"
 
-class MessageManager {
+export default class MessageMongoDAO {
     constructor(){
         this.model = messageModel;
     }
 
-    async getMessages(){
+    async get(){
         return await messageModel.find().lean();
     }
 
-    async postMessage(message){
+    async add(message){
         return await messageModel.create(message);
     }
 
-    async deleteMessage(mid){
+    async delete(mid){
         return await messageModel.findByIdAndDelete(mid)
     }
 }
-
-const messageManager = new MessageManager();
-
-export default messageManager;

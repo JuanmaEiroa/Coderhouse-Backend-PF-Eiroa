@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import cartManager from "../dbmanagers/cart.manager.js";
 
 const userSchema = new mongoose.Schema({
   first_name: {

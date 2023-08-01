@@ -9,7 +9,7 @@ import userRouter from "./routers/users.router.js";
 import viewsRouter from "./routers/views.router.js";
 import * as path from "path";
 import { app, io } from "./utils/server.util.js";
-import messageManager from "./dao/dbdao/message.manager.js";
+import messageController from "./controllers/message.controller.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
@@ -58,12 +58,12 @@ app.use("/", viewsRouter);
 
 io.on("connection", async (socket) => {
   socket.on("message", async (data) => {
-    await messageManager.postMessage(data);
-    io.emit("messageLogs", await messageManager.getMessages());
+    await messageController.add(data);
+    io.emit("messageLogs", await messageController.get());
   });
 
   socket.on("sayhello", async (data) => {
-    io.emit("messageLogs", await messageManager.getMessages());
+    io.emit("messageLogs", await messageController.get());
     socket.broadcast.emit("alert", data);
   });
 });

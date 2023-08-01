@@ -1,31 +1,30 @@
 import { cartModel } from "../models/cart.model.js";
-import productManager from "../dbmanagers/product.manager.js";
+import { productModel } from "../models/product.model.js"
 
-class CartManager {
+export default class CartMongoDAO {
   constructor() {
-    this.model = cartModel;
+    this.collection = cartModel;
   }
 
-  async getCarts() {
-    return await cartModel.find().lean();
+  async get() {
+    return await this.collection.find().lean();
   }
 
-  async getCartById(cid) {
-    return await cartModel.findById(cid).populate("products.product", "-__v").lean();
+  async getById(cid) {
+    return await this.collection.findById(cid).populate("products.product", "-__v").lean();
   }
 
-  async addCart(cart) {
-    return await cartModel.create(cart);
+  async add(cart) {
+    return await this.collection.create(cart);
   }
 
-  async updateCart(cid, cart) {
-    return await cartModel.findByIdAndUpdate(
+  async update(cid, cart) {
+    return await this.collection.findByIdAndUpdate(
       cid,
       { $set: cart },
       { new: true }
     );
   }
-  
 
   async addProdtoCart(cid, pid) {
     try {
@@ -33,7 +32,7 @@ class CartManager {
       let selectedCart = await this.getCartById(cid);
 
       //Se trae la lista de productos y se busca el que corresponde según el id
-      let selectedProduct = await productManager.getProductById(pid);
+      let selectedProduct = await productModel.findById(pid);
 
       let existingProduct = selectedCart.products.find((prod) => {
         return prod.product._id.toString() === selectedProduct._id.toString();
@@ -57,7 +56,7 @@ class CartManager {
 
     async deleteProdfromCart(cid, pid) {
     try {
-      await cartModel.updateOne(
+      await this.collection.updateOne(
         { _id: cid },
         { $pull: { products: { product: pid } } }
       );
@@ -69,7 +68,7 @@ class CartManager {
 
   async deleteAllProds(cid) {
     try {
-      await cartModel.updateOne({ _id: cid }, { $set: { products: [] } });
+      await this.collection.updateOne({ _id: cid }, { $set: { products: [] } });
     } catch (err) {
       console.log(`Error al borrar los productos del carrito: ${err}`);
     }
@@ -77,7 +76,7 @@ class CartManager {
 
   async updateProdfromCart(cid, pid, quantity) {
     try {
-      await cartModel.updateOne(
+      await this.collection.updateOne(
         { _id: cid, "products.product": pid },
         { $set: { "products.$.quantity": quantity.quantity } }
       );
@@ -88,7 +87,3 @@ class CartManager {
     }
   }
 }
-
-const cartManager = new CartManager();
-
-export default cartManager;

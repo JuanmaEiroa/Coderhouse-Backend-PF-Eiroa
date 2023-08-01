@@ -1,6 +1,6 @@
 import { usersPersist } from "../dao/factory/factory.js";
 
-export default class UserController {
+class UserController {
   constructor() {
     this.dao = usersPersist;
   }
@@ -29,3 +29,6 @@ export default class UserController {
     return await this.collection.add(userData);
   }
 }
+
+const userController = new UserController;
+export default userController;
