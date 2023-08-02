@@ -1,11 +1,11 @@
 import { Router } from "express";
-import messageManager from "../dao/dbdao/message.manager.js";
+import messageController from "../controllers/message.controller.js"
 
 const messageRouter = Router();
 
 messageRouter.get("/", async (req, res) => {
   try {
-    res.status(200).send(await messageManager.getMessages());
+    res.status(200).send(await messageController.get());
   } catch (err) {
     res.status(400).send(err);
   }
@@ -13,7 +13,7 @@ messageRouter.get("/", async (req, res) => {
 
 messageRouter.post("/", async (req, res) => {
   try {
-    res.status(201).send(await messageManager.addMessage(req.body));
+    res.status(201).send(await messageController.add(req.body));
   } catch (err) {
     res.status(400).send(err);
   }
@@ -21,7 +21,7 @@ messageRouter.post("/", async (req, res) => {
 
 messageRouter.delete("/:mid", async (req, res) => {
   try {
-    res.status(200).send(await messageManager.deleteMessage(req.params.mid));
+    res.status(200).send(await messageController.delete(req.params.mid));
   } catch (err) {
     res.status(400).send(err);
   }

@@ -13,3 +13,24 @@ export function isGuest(req, res, next) {
     res.redirect("/products");
   }
 }
+
+//FUNCION PARA VALIDACION DE ENDPOINTS
+export function isAdmin(req, res, next) {
+  if (req.session.user.role === "admin") {
+    next();
+  } else {
+    res
+      .status(403)
+      .json({ message: "Acceso no permitido. Se requiere ser Admin" });
+  }
+}
+
+export function isUser(req, res, next) {
+  if (req.session.user.role === "user") {
+    next();
+  } else {
+    res
+      .status(403)
+      .json({ message: "Acceso no permitido. Se requiere ser User" });
+  }
+}

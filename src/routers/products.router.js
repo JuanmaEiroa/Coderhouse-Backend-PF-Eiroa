@@ -1,12 +1,12 @@
 import { Router } from "express";
-import productManager from "../dao/dbdao/product.manager.js";
 import { io } from "../utils/server.util.js";
+import productController from "../controllers/product.controller.js"
 
 const productRouter = Router();
 
 productRouter.get("/", async (req, res) => {
   try {
-    res.status(200).send(await productManager.getProducts());
+    res.status(200).send(await productController.get());
   } catch (err) {
     res.status(400).send(err);
   }
@@ -14,7 +14,7 @@ productRouter.get("/", async (req, res) => {
 
 productRouter.get("/:pid", async (req, res) => {
   try {
-    res.status(200).send(await productManager.getProductById(req.params.pid));
+    res.status(200).send(await productController.getById(req.params.pid));
   } catch (err) {
     res.status(400).send(err);
   }
@@ -22,7 +22,7 @@ productRouter.get("/:pid", async (req, res) => {
 
 productRouter.post("/", async (req, res) => {
   try {
-    res.status(201).send(await productManager.addProduct(req.body));
+    res.status(201).send(await productController.add(req.body));
     io.emit("newProd", req.body);
   } catch (err) {
     res.status(400).send(err);
@@ -33,7 +33,7 @@ productRouter.put("/:pid", async (req, res) => {
   try {
     res
       .status(201)
-      .send(await productManager.updateProduct(req.params.pid, req.body));
+      .send(await productController.update(req.params.pid, req.body));
   } catch (err) {
     res.status(400).send(err);
   }
@@ -41,7 +41,7 @@ productRouter.put("/:pid", async (req, res) => {
 
 productRouter.delete("/:pid", async (req, res) => {
   try {
-    res.status(200).send(await productManager.deleteProduct(req.params.pid));
+    res.status(200).send(await productController.delete(req.params.pid));
     io.emit("deletedProd", req.params.pid);
   } catch (err) {
     res.status(400).send(err);

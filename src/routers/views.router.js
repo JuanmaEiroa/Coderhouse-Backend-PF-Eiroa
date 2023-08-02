@@ -1,8 +1,9 @@
 import { Router } from "express";
-import productManager from "../dao/dbdao/product.manager.js";
-import messageManager from "../dao/dbmanagers/message.manager.js";
-import cartManager from "../dao/dbmanagers/cart.manager.js";
-import { isAuth, isGuest } from "../middlewares/auth.middleware.js";
+import productController from "../controllers/product.controller.js";
+import messageController from "../controllers/message.controller.js";
+import cartController from "../controllers/cart.controller.js";
+import userController from "../controllers/user.controller.js";
+import { isAuth, isGuest, isUser, isAdmin } from "../middlewares/auth.middleware.js";
 
 const viewsRouter = Router();
 
@@ -16,7 +17,7 @@ viewsRouter.get("/products", isAuth, async (req, res) => {
   const { user } = req.session;
   delete user.password;
   const { limit, page, category, availability, sort } = req.query;
-  const prodList = await productManager.getProducts(
+  const prodList = await productController.get(
     limit,
     page,
     category,
@@ -42,7 +43,7 @@ viewsRouter.get("/products", isAuth, async (req, res) => {
 
 viewsRouter.get("/carts/:cid", async (req, res) => {
   try {
-    const cart = await cartManager.getCartById(req.params.cid);
+    const cart = await cartController.getById(req.params.cid);
     res.render("cart", cart);
   } catch (err) {
     res.status(400).send(err);
@@ -50,12 +51,12 @@ viewsRouter.get("/carts/:cid", async (req, res) => {
 });
 
 viewsRouter.get("/realtimeproducts", async (req, res) => {
-  const prodList = await productManager.getProducts();
+  const prodList = await productController.get();
   res.render("realTimeProducts", { prodList });
 });
 
-viewsRouter.get("/chat", async (req, res) => {
-  const renderMessages = await messageManager.getMessages();
+viewsRouter.get("/chat", isUser, async (req, res) => {
+  const renderMessages = await messageController.get();
   res.render("chat", { renderMessages });
 });
 
@@ -79,10 +80,11 @@ viewsRouter.get("/loginerror", (req, res) => {
 
 viewsRouter.get("/current", async (req, res) => {
   const { user } = req.session;
-  const cart = await cartManager.getCartById(user.cart);
+  const cart = await cartController.getById(user.cart);
+  const userToShow = await userController.getById(user.id)
   res.render("current", {
     title: "Carrito de Compras",
-    user,
+    userToShow,
     cart,
   });
 });

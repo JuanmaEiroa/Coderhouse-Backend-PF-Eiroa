@@ -1,9 +1,9 @@
 import passport from "passport";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
-import userManager from "../dao/dbmanagers/user.manager.js";
+import userController from "../controllers/user.controller.js";
+import cartController from "../controllers/cart.controller.js";
 import { encryptPassword, comparePassword } from "../utils/encrypt.util.js";
-import cartManager from "../dao/dbmanagers/cart.manager.js";
 import { appConfig } from "./env.config.js";
 
 const LocalStrategy = local.Strategy;
@@ -15,13 +15,13 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         const { first_name, last_name, email, age, img } = req.body;
         try {
-          let user = await userManager.getByEmail(username);
+          let user = await userController.getByEmail(username);
           if (user || username === appConfig.adminName) {
             console.log("El usuario ya existe");
             return done(null, false);
           }
           const encryptedPass = await encryptPassword(password);
-          const newUser = await userManager.createUser({
+          const newUser = await userController.add({
             first_name,
             last_name,
             email,
@@ -29,7 +29,7 @@ const initializePassport = () => {
             password: encryptedPass,
             img,
           });
-          const userCart = await cartManager.addCart();
+          const userCart = await cartController.add();
           newUser.cart = userCart._id;
           await newUser.save();
 
@@ -56,7 +56,7 @@ const initializePassport = () => {
             }
             return done(null, adminUser);
           } else {
-            const user = await userManager.getByEmail(username);
+            const user = await userController.getByEmail(username);
             if (!user) {
               console.log("El usuario no existe. Regístrese");
               return done(null, false);
@@ -84,7 +84,7 @@ const initializePassport = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          let user = await userManager.getByEmail(profile._json.email);
+          let user = await userController.getByEmail(profile._json.email);
           if (!user) {
             let newUser = {
               first_name: profile._json.name,
@@ -94,7 +94,7 @@ const initializePassport = () => {
               age: undefined,
               img: profile._json.avatar_url,
             };
-            user = await userManager.createUser(newUser);
+            user = await userController.add(newUser);
             done(null, user);
           } else {
             done(null, user);
@@ -118,7 +118,7 @@ passport.deserializeUser(async (id, done) => {
   if (typeof id === "object" && id.role === "Admin") {
     done(null, id);
   } else {
-    let user = await userManager.getById(id);
+    let user = await userController.getById(id);
     done(null, user);
   }
 });

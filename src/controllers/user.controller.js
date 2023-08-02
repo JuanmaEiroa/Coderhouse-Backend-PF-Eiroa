@@ -1,32 +1,24 @@
-import { usersPersist } from "../dao/factory/factory.js";
+import { userService } from "../repositories/repoIndex.js";
 
 class UserController {
   constructor() {
-    this.dao = usersPersist;
+    this.service = userService;
   }
 
   async get() {
-    return await this.dao.get();
+    return await this.service.get();
   }
 
   async getByEmail(email) {
-    return await this.collection.getByEmail(email);
+    return await this.service.getByEmail(email);
   }
 
   async getById(id) {
-    return await this.collection.getById(id);
+    return await this.service.getById(id);
   }
 
   async add(userData) {
-    if (
-      !userData.first_name ||
-      !userData.last_name ||
-      !userData.email ||
-      !userData.password
-    ) {
-      throw new Error("Campos incompletos");
-    }
-    return await this.collection.add(userData);
+    return await this.service.add(userData);
   }
 }
 

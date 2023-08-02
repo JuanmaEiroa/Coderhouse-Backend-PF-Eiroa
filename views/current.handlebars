@@ -1,14 +1,14 @@
 <nav id="navbar">
   <p>Bienvenido,
-    {{user.first_name}}
-    {{user.last_name}}
+    {{userToShow.first_name}}
+    {{userToShow.last_name}}
     <br />
-    {{user.email}}
+    {{userToShow.email}}
     <br />
     Rol:
-    {{user.role}}
+    {{userToShow.role}}
   </p>
-  <input type="hidden" id="cartId" value="{{user.cart}}" />
+  <input type="hidden" id="cartId" value="{{userToShow.cart}}" />
   <a href="/products"><button class="navBtn">Ver Productos</button></a>
   <form action="/api/users/logout" method="post">
     <button type="submit">Cerrar sesión</button>
@@ -16,17 +16,17 @@
 </nav>
 <h1>Datos del Usuario</h1>
 <div class="userData">
-<h4>Nombre: </h4>{{user.first_name}}
+<h4>Nombre: </h4>{{userToShow.first_name}}
 <br />
-<h4>Apellido: </h4> {{user.last_name}}
+<h4>Apellido: </h4> {{userToShow.last_name}}
 <br />
-<h4>E-mail: </h4> {{user.email}}
+<h4>E-mail: </h4> {{userToShow.email}}
 <br />
-<h4>Edad: </h4> {{user.age}}
+<h4>Edad: </h4> {{userToShow.age}}
 <br />
 <h4>Foto de Perfil: </h4> 
 <br />
-{{user.img}}
+{{userToShow.img}}
 </div>
 <h2>Mi Carrito</h2>
 <br />
