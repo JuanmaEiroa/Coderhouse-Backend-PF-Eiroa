@@ -81,7 +81,8 @@ viewsRouter.get("/loginerror", (req, res) => {
 viewsRouter.get("/current", async (req, res) => {
   const { user } = req.session;
   const cart = await cartController.getById(user.cart);
-  const userToShow = await userController.getById(user.id)
+  const userToShow = await userController.getById(user.id);
+  console.log(userToShow);
   res.render("current", {
     title: "Carrito de Compras",
     userToShow,

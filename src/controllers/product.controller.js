@@ -6,7 +6,7 @@ class ProductController {
   }
 
   async get() {
-    return await this.dao.get()
+    return await this.dao.get();
   }
 
   async getById(pid) {
@@ -18,7 +18,7 @@ class ProductController {
   }
 
   async update(pid, product) {
-    return await this.dao.update(pid, product)
+    return await this.dao.update(pid, product);
   }
 
   async deleteProduct(pid) {

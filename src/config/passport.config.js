@@ -56,6 +56,7 @@ const initializePassport = () => {
             }
             return done(null, adminUser);
           } else {
+            console.log(username);
             const user = await userController.getByEmail(username);
             if (!user) {
               console.log("El usuario no existe. Regístrese");
