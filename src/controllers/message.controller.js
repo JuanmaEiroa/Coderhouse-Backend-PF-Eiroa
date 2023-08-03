@@ -1,8 +1,9 @@
-import { messagesPersist } from "../dao/factory/factory.js";
+//import { messagesPersist } from "../dao/factory/factory.js";
+import MessageMongoDAO from "../dao/dbdao/message.dao.js";
 
 class MessageController {
     constructor(){
-        this.dao = messagesPersist;
+        this.dao = new MessageMongoDAO();
     }
 
     async get(){

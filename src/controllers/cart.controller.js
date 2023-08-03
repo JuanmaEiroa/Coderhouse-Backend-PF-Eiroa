@@ -1,8 +1,9 @@
-import { productsPersist } from "../dao/factory/factory.js";
+//import { cartsPersist } from "../dao/factory/factory.js";
+import CartMongoDAO from "../dao/dbdao/cart.dao.js"
 
 class CartController {
   constructor() {
-    this.dao = productsPersist;
+    this.dao = new CartMongoDAO();
   }
 
   async get() {

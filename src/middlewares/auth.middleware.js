@@ -16,7 +16,7 @@ export function isGuest(req, res, next) {
 
 //FUNCION PARA VALIDACION DE ENDPOINTS
 export function isAdmin(req, res, next) {
-  if (req.session.user.role === "admin") {
+  if (req.session.user.role === "Admin") {
     next();
   } else {
     res
@@ -26,7 +26,7 @@ export function isAdmin(req, res, next) {
 }
 
 export function isUser(req, res, next) {
-  if (req.session.user.role === "user") {
+  if (req.session.user.role === "User") {
     next();
   } else {
     res

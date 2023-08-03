@@ -1,8 +1,9 @@
-import { productsPersist } from "../dao/factory/factory.js";
+//import { productsPersist } from "../dao/factory/factory.js";
+import ProductMongoDAO from "../dao/dbdao/product.dao.js";
 
 class ProductController {
   constructor() {
-    this.dao = productsPersist;
+    this.dao = new ProductMongoDAO();
   }
 
   async get() {
