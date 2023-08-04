@@ -29,7 +29,7 @@ export default class CartMongoDAO {
   async addProdtoCart(cid, pid) {
     try {
       //Se trae la lista de carritos y se busca el que corresponde según el id
-      let selectedCart = await this.getCartById(cid);
+      let selectedCart = await this.getById(cid);
 
       //Se trae la lista de productos y se busca el que corresponde según el id
       let selectedProduct = await productModel.findById(pid);
@@ -47,7 +47,7 @@ export default class CartMongoDAO {
         });
       }
 
-      await this.updateCart(cid, selectedCart);
+      await this.update(cid, selectedCart);
     } catch (err) {
       console.log(`Error al agregar el producto al carrito por ID: ${err}`);
     }

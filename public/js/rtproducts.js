@@ -21,7 +21,6 @@ socket.on("newProd", (prod) => {
 socket.on("deletedProd", (prodId) => {
   const tableBody = document.getElementById("prodTableBody");
   const rowToDelete = document.getElementById(`productRow_${prodId}`);
-  console.log(rowToDelete);
   if (rowToDelete) {
     tableBody.removeChild(rowToDelete);
   }

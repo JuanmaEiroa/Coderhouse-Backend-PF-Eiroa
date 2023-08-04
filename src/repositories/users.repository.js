@@ -16,8 +16,8 @@ export default class UserRepository {
       async getById(id) {
         const user = await this.dao.getById(id);
         const userDTO = new UserDTO(user);
-        //console.log(userDTO)
         return userDTO;
+       
       }
     
       async add(userData) {

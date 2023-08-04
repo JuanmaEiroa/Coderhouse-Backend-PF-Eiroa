@@ -14,7 +14,7 @@ export default class UserMongoDAO {
   }
 
   async getById(id) {
-    return await this.collection.findById(id);
+    return await this.collection.findById(id).lean();
   }
 
   async add(userData) {

@@ -15,7 +15,6 @@ import session from "express-session";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { appConfig } from "./config/env.config.js";
-import { isAdmin, isUser } from "./middlewares/auth.middleware.js";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -51,9 +50,9 @@ mongoose.connect(
   { dbName: appConfig.mongoDbName }
 );
 
-app.use("/api/products", isAdmin, productRouter);
-app.use("/api/carts", isAdmin, cartRouter);
-app.use("/api/messages", isUser, messageRouter);
+app.use("/api/products", productRouter);
+app.use("/api/carts", cartRouter);
+app.use("/api/messages", messageRouter);
 app.use("/api/users", userRouter);
 app.use("/", viewsRouter);
 

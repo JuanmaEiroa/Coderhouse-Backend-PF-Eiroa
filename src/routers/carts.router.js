@@ -1,5 +1,5 @@
 import { Router } from "express";
-import cartController from "../controllers/cart.controller.js"
+import cartController from "../controllers/cart.controller.js";
 
 const cartRouter = Router();
 
@@ -29,9 +29,7 @@ cartRouter.post("/", async (req, res) => {
 
 cartRouter.put("/:cid", async (req, res) => {
   try {
-    res
-      .status(201)
-      .send(await cartController.update(req.params.cid, req.body));
+    res.status(201).send(await cartController.update(req.params.cid, req.body));
   } catch (err) {
     res.status(400).send(err);
   }
@@ -59,7 +57,9 @@ cartRouter.delete("/:cid/product/:pid", async (req, res) => {
   try {
     res
       .status(201)
-      .send(await cartController.deleteProdfromCart(req.params.cid, req.params.pid));
+      .send(
+        await cartController.deleteProdfromCart(req.params.cid, req.params.pid)
+      );
   } catch (err) {
     res.status(400).send(err);
   }
@@ -69,7 +69,13 @@ cartRouter.put("/:cid/product/:pid", async (req, res) => {
   try {
     res
       .status(201)
-      .send(await cartController.updateProdfromCart(req.params.cid, req.params.pid, req.body));
+      .send(
+        await cartController.updateProdfromCart(
+          req.params.cid,
+          req.params.pid,
+          req.body
+        )
+      );
   } catch (err) {
     res.status(400).send(err);
   }
