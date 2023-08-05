@@ -17,7 +17,6 @@ export function isGuest(req, res, next) {
 //FUNCION PARA VALIDACION DE ENDPOINTS
 export function isAdmin(req, res, next) {
   const { user } = req.session;
-  console.log(user);
   if (user && user.role === "Admin") {
     next();
   } else {
@@ -29,7 +28,6 @@ export function isAdmin(req, res, next) {
 
 export function isUser(req, res, next) {
   const { user } = req.session;
-  console.log(user);
   if (user && user.role === "User") {
     next();
   } else {

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import cartController from "../controllers/cart.controller.js";
 import { isUser } from "../middlewares/auth.middleware.js";
+import purchaseController from "../controllers/purchase.controller.js";
 
 const cartRouter = Router();
 
@@ -81,5 +82,16 @@ cartRouter.put("/:cid/product/:pid", async (req, res) => {
     res.status(400).send(err);
   }
 });
+
+//RUTA PARA FINALIZAR COMPRA - TERMINAR
+
+cartRouter.get("/:cid/purchase", async (req, res) => {
+  try {
+    res.send(await purchaseController.endPurchase(req.params.cid))
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 
 export default cartRouter;

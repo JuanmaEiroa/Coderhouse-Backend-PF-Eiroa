@@ -51,8 +51,7 @@ export default class CartMongoDAO {
     } catch (err) {
       console.log(`Error al agregar el producto al carrito por ID: ${err}`);
     }
-  }
-  
+  } 
 
     async deleteProdfromCart(cid, pid) {
     try {
@@ -86,4 +85,5 @@ export default class CartMongoDAO {
       );
     }
   }
+
 }

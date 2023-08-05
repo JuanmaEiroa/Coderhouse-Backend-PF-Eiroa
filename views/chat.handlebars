@@ -8,7 +8,8 @@
     Rol:
     {{user.role}}
   </p>
-  <input type="hidden" id="cartId" value="{{user.cart}}">
+  <input type="hidden" id="cartId" value="{{user.cart}}" />
+  <a href="/products"><button class="navBtn">Ver Productos</button></a>
   <a href="/current"><button class="navBtn">Mi Carrito</button></a>
   <form action="/api/users/logout" method="post">
     <button type="submit">Cerrar sesión</button>
@@ -22,7 +23,7 @@
     </p>
   </div>
   <div class="chatBoxCont">
-    <input id="chatBox" type="text"/>
+    <input id="chatBox" type="text" />
     <button id="sendBtn">Enviar</button>
   </div>
 </div>

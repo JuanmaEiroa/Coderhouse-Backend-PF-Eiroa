@@ -44,16 +44,20 @@ const initializePassport = () => {
   passport.use(
     "login",
     new LocalStrategy(
-      {passReqToCallback: true, usernameField: "email" },
+      { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
         try {
-          if (username === appConfig.adminName && password === appConfig.adminPassword) {
+          if (
+            username === appConfig.adminName &&
+            password === appConfig.adminPassword
+          ) {
             const adminUser = {
               first_name: "Coder",
               last_name: "House",
               email: username,
-              role: "Admin"
-            }
+              role: "Admin",
+              cart: [],
+            };
             return done(null, adminUser);
           } else {
             const user = await userController.getByEmail(username);
@@ -106,22 +110,22 @@ const initializePassport = () => {
     )
   );
 
-passport.serializeUser((user, done) => {
-  if (user.role === "Admin") {
-    done(null, user);
-  } else {
-    done(null, user._id);
-  }
-});
+  passport.serializeUser((user, done) => {
+    if (user.role === "Admin") {
+      done(null, user);
+    } else {
+      done(null, user._id);
+    }
+  });
 
-passport.deserializeUser(async (id, done) => {
-  if (typeof id === "object" && id.role === "Admin") {
-    done(null, id);
-  } else {
-    let user = await userController.getById(id);
-    done(null, user);
-  }
-});
+  passport.deserializeUser(async (id, done) => {
+    if (typeof id === "object" && id.role === "Admin") {
+      done(null, id);
+    } else {
+      let user = await userController.getById(id);
+      done(null, user);
+    }
+  });
 };
 
 export default initializePassport;
