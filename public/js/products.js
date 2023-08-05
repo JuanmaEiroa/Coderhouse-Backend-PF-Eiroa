@@ -1,26 +1,26 @@
 function addToCart(pid) {
   const cid = document.getElementById("cartId").value;
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = `/api/carts/${cid}/product/${pid}`;
-  document.body.appendChild(form);
-  form.submit();
-}
-
-function deleteFromCart(pid) {
-  const cid = document.getElementById("cartId").value;
-  const url = `/api/carts/${cid}/product/${pid}`;
-  fetch(url, {
-    method: "DELETE",
+  fetch(`/api/carts/${cid}/product/${pid}`, {
+    method: "POST",
   })
     .then((response) => {
       if (response.ok) {
-        location.reload();
+        Swal.fire({
+          text: `Producto agregado al carrito!`,
+          toast: true,
+          icon: "success",
+          position: "bottom-right",
+        });
       } else {
-        console.log("Failed to remove product from cart");
+        Swal.fire({
+          text: `Error al agregar el producto al carrito.`,
+          icon: "error",
+          toast: true,
+          position: "bottom-right",
+        });
       }
     })
     .catch((error) => {
-      console.log("Error occurred while removing product from cart:", error);
+      console.error("Error:", error);
     });
 }

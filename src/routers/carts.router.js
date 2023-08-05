@@ -83,15 +83,13 @@ cartRouter.put("/:cid/product/:pid", async (req, res) => {
   }
 });
 
-//RUTA PARA FINALIZAR COMPRA - TERMINAR
-
-cartRouter.get("/:cid/purchase", async (req, res) => {
+cartRouter.post("/:cid/purchase", async (req, res) => {
   try {
-    res.send(await purchaseController.endPurchase(req.params.cid))
+    const { user } = req.session;
+    res.status(201).send(await purchaseController.endPurchase(req.params.cid, user))
   } catch (err) {
     res.status(400).send(err);
   }
 });
-
 
 export default cartRouter;

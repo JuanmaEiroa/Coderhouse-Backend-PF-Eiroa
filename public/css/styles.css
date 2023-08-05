@@ -177,3 +177,21 @@ td {
   width: 15%;
   text-align: center;
 }
+
+.endPurchCont {
+  text-align: center;
+}
+
+.endPurchBtn {
+  background-color: green;
+  color: whitesmoke;
+  font-size: 1.2em;
+  border: none;
+  height: 3em;
+  box-shadow: 1px 3px 3px black;
+  width: 200px;
+}
+
+.endPurchBtn:hover {
+  cursor:pointer;
+}

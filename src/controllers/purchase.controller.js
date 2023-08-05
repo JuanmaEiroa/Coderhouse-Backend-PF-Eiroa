@@ -2,37 +2,80 @@ import {
   cartService,
   productService,
   ticketService,
+  userService,
 } from "../repositories/repoIndex.js";
 
 //TERMINAR GENERACIÓN DE TICKET
 
 class PurchaseController {
-  async endPurchase(cid) {
-    //Obtengo el carrito y sus productos
-    const cart = await cartService.getById(cid);
-    const cartProducts = cart.products;
+  async endPurchase(cid, user) {
+    try {
+      //Obtengo el carrito y sus productos
+      const cart = await cartService.getById(cid);
+      const cartProducts = cart.products;
 
-    //Genero un array para los productos finales
-    const finalProducts = [];
+      //Genero un array para los productos finales
+      let finalProducts = [];
+      let finalPrice = 0;
 
-    //Recorro cada producto y obtengo su id
-    cartProducts.forEach(async (prod) => {
-      const cartProdId = prod.product;
-      
-      //Se busca producto por id en la lista
-      const productFromList = await productService.getById(cartProdId);
-      //console.log(productFromList)
-
-      //Si la cantidad es menor o igual al stock disponible, se restan del mismo
-      if (prod.quantity < productFromList.stock) {
-        productFromList.stock -= prod.quantity;
-        await productService.update(productFromList._id, productFromList);
-        finalProducts.push(prod);
-        await cartService.deleteProdfromCart(cid, prod.product)
-      } else {
-        console.log(`${prod.product.title}: Stock insuficiente para la compra`);
+      /*//Recorro cada producto y obtengo su id
+        cartProducts.forEach(async (prod) => {
+            const cartProdId = prod.product;
+            
+            //Se busca producto por id en la lista
+            const productFromList = await productService.getById(cartProdId);
+            //console.log(productFromList)
+            
+            //Si la cantidad es menor o igual al stock disponible, se restan del mismo
+            if (prod.quantity < productFromList.stock) {
+                productFromList.stock -= prod.quantity;
+                await productService.update(productFromList._id, productFromList);
+                finalProducts.push(prod);
+                finalPrice = finalPrice + prod.quantity * productFromList.price;
+                await cartService.deleteProdfromCart(cid, prod.product);
+                console.log(productFromList.price);
+            } else {
+                console.log(`${prod.product.title}: Stock insuficiente para la compra`);
       }
     });
+    */
+
+      //Se recorre cada producto del cart
+      for (const prod of cartProducts) {
+        //Se obtiene id del producto y se busca en la lista general
+        const cartProdId = prod.product;
+        const productFromList = await productService.getById(cartProdId);
+
+        //Si la cantidad es menor o igual al stock disponible, se restan del mismo
+        if (prod.quantity <= productFromList.stock) {
+          productFromList.stock -= prod.quantity;
+          await productService.update(productFromList._id, productFromList);
+          //Se carga el producto en el array final
+          finalProducts.push(prod);
+          //Se elimina del carrito
+          await cartService.deleteProdfromCart(cid, prod.product);
+          //Se suma el precio total
+          const productPrice = productFromList.price;
+          finalPrice += prod.quantity * productPrice;
+        } else {
+          //En caso de no haber stock suficiente, se loggea un error
+          console.log(
+            `${productFromList.title}: Stock insuficiente para la compra`
+          );
+        }
+      }
+
+      //Obtención del usuario actual
+      const purchaseUser = await userService.getById(user._id);
+
+      //Generación del ticket de compra
+      await ticketService.add({
+        amount: finalPrice,
+        purchaser: purchaseUser.email,
+      });
+    } catch (error) {
+      console.error("Error durante la compra:", error);
+    }
   }
 }
 
