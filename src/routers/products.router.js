@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { io } from "../utils/server.util.js";
 import productController from "../controllers/product.controller.js"
+import { isAdmin } from "../middlewares/auth.middleware.js";
 
 const productRouter = Router();
 
@@ -20,7 +21,7 @@ productRouter.get("/:pid", async (req, res) => {
   }
 });
 
-productRouter.post("/", async (req, res) => {
+productRouter.post("/", isAdmin, async (req, res) => {
   try {
     res.status(201).send(await productController.add(req.body));
     io.emit("newProd", req.body);
@@ -29,7 +30,7 @@ productRouter.post("/", async (req, res) => {
   }
 });
 
-productRouter.put("/:pid", async (req, res) => {
+productRouter.put("/:pid", isAdmin, async (req, res) => {
   try {
     res
       .status(201)
@@ -39,7 +40,7 @@ productRouter.put("/:pid", async (req, res) => {
   }
 });
 
-productRouter.delete("/:pid", async (req, res) => {
+productRouter.delete("/:pid", isAdmin, async (req, res) => {
   try {
     res.status(200).send(await productController.delete(req.params.pid));
     io.emit("deletedProd", req.params.pid);

@@ -15,6 +15,7 @@ import session from "express-session";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { appConfig } from "./config/env.config.js";
+import ticketRouter from "./routers/tickets.router.js";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,15 +46,13 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect(
-  appConfig.mongoUrl,
-  { dbName: appConfig.mongoDbName }
-);
+mongoose.connect(appConfig.mongoUrl, { dbName: appConfig.mongoDbName });
 
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/messages", messageRouter);
 app.use("/api/users", userRouter);
+app.use("/api/tickets", ticketRouter);
 app.use("/", viewsRouter);
 
 io.on("connection", async (socket) => {
@@ -67,4 +66,3 @@ io.on("connection", async (socket) => {
     socket.broadcast.emit("alert", data);
   });
 });
-

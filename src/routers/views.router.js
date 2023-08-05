@@ -3,7 +3,7 @@ import productController from "../controllers/product.controller.js";
 import messageController from "../controllers/message.controller.js";
 import cartController from "../controllers/cart.controller.js";
 import userController from "../controllers/user.controller.js";
-import { isAuth, isGuest, isUser, isAdmin } from "../middlewares/auth.middleware.js";
+import { isAuth, isGuest, isUser } from "../middlewares/auth.middleware.js";
 
 const viewsRouter = Router();
 
@@ -55,12 +55,13 @@ viewsRouter.get("/realtimeproducts", async (req, res) => {
   res.render("realTimeProducts", { prodList });
 });
 
-viewsRouter.get("/chat", isUser, async (req, res) => {
+viewsRouter.get("/chat", async (req, res) => {
   const renderMessages = await messageController.get();
-  res.render("chat", { renderMessages });
+  const {user} = req.session;
+  res.render("chat", { title: "CoderChat", renderMessages, user});
 });
 
-viewsRouter.get("/register", isGuest, (req, res) => {
+viewsRouter.get("/register", (req, res) => {
   res.render("register", {
     title: "Registrar nuevo usuario",
   });

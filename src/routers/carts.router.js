@@ -1,5 +1,6 @@
 import { Router } from "express";
 import cartController from "../controllers/cart.controller.js";
+import { isUser } from "../middlewares/auth.middleware.js";
 
 const cartRouter = Router();
 
@@ -43,7 +44,7 @@ cartRouter.delete("/:cid", async (req, res) => {
   }
 });
 
-cartRouter.post("/:cid/product/:pid", async (req, res) => {
+cartRouter.post("/:cid/product/:pid", isUser, async (req, res) => {
   try {
     res
       .status(201)

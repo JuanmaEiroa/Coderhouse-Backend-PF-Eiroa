@@ -1,5 +1,6 @@
 import { Router } from "express";
 import messageController from "../controllers/message.controller.js"
+import { isUser, isAuth } from "../middlewares/auth.middleware.js";
 
 const messageRouter = Router();
 
@@ -11,7 +12,7 @@ messageRouter.get("/", async (req, res) => {
   }
 });
 
-messageRouter.post("/", async (req, res) => {
+messageRouter.post("/", isUser, async (req, res) => {
   try {
     res.status(201).send(await messageController.add(req.body));
   } catch (err) {
