@@ -5,8 +5,6 @@ import {
   userService,
 } from "../repositories/repoIndex.js";
 
-//TERMINAR GENERACIÓN DE TICKET
-
 class PurchaseController {
   async endPurchase(cid, user) {
     try {
@@ -17,28 +15,6 @@ class PurchaseController {
       //Genero un array para los productos finales
       let finalProducts = [];
       let finalPrice = 0;
-
-      /*//Recorro cada producto y obtengo su id
-        cartProducts.forEach(async (prod) => {
-            const cartProdId = prod.product;
-            
-            //Se busca producto por id en la lista
-            const productFromList = await productService.getById(cartProdId);
-            //console.log(productFromList)
-            
-            //Si la cantidad es menor o igual al stock disponible, se restan del mismo
-            if (prod.quantity < productFromList.stock) {
-                productFromList.stock -= prod.quantity;
-                await productService.update(productFromList._id, productFromList);
-                finalProducts.push(prod);
-                finalPrice = finalPrice + prod.quantity * productFromList.price;
-                await cartService.deleteProdfromCart(cid, prod.product);
-                console.log(productFromList.price);
-            } else {
-                console.log(`${prod.product.title}: Stock insuficiente para la compra`);
-      }
-    });
-    */
 
       //Se recorre cada producto del cart
       for (const prod of cartProducts) {
