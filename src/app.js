@@ -7,6 +7,8 @@ import cartRouter from "./routers/carts.router.js";
 import messageRouter from "./routers/messages.router.js";
 import userRouter from "./routers/users.router.js";
 import viewsRouter from "./routers/views.router.js";
+import ticketRouter from "./routers/tickets.router.js";
+import mockRouter from "./routers/mock.router.js";
 import * as path from "path";
 import { app, io } from "./utils/server.util.js";
 import messageController from "./controllers/message.controller.js";
@@ -15,7 +17,7 @@ import session from "express-session";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { appConfig } from "./config/env.config.js";
-import ticketRouter from "./routers/tickets.router.js";
+import errorMiddleware from "./middlewares/error.middleware.js";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -53,7 +55,10 @@ app.use("/api/carts", cartRouter);
 app.use("/api/messages", messageRouter);
 app.use("/api/users", userRouter);
 app.use("/api/tickets", ticketRouter);
+app.use("/mockingproducts", mockRouter);
 app.use("/", viewsRouter);
+
+app.use(errorMiddleware)
 
 io.on("connection", async (socket) => {
   socket.on("message", async (data) => {

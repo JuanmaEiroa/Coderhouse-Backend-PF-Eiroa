@@ -1,9 +1,12 @@
+//Importación de dotenv y el program definido con Commander
 import dotenv from "dotenv";
 import program from "./commander.config.js";
 
+//Definición de constantes según los parámetros usados en consola
 const port = program.opts().p;
 const persistence = program.opts().pers;
 
+//Uso de dotenv y exportación de todas las variables de entorno
 dotenv.config({ path: `${process.cwd()}/src/config/.env/.env` });
 
 export const appConfig = {

@@ -1,6 +1,5 @@
 //import { cartsPersist } from "../dao/factory/factory.js";
-import { cartService, ticketService } from "../repositories/repoIndex.js"
-import { productService } from "../repositories/repoIndex.js";
+import { cartService } from "../repositories/repoIndex.js";
 
 class CartController {
   constructor() {
@@ -38,7 +37,6 @@ class CartController {
   async updateProdfromCart(cid, pid, quantity) {
     return await this.service.updateProdfromCart(cid, pid, quantity);
   }
-
 }
 
 const cartController = new CartController();

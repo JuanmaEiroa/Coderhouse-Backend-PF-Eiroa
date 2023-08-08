@@ -3,7 +3,7 @@ import productController from "../controllers/product.controller.js";
 import messageController from "../controllers/message.controller.js";
 import cartController from "../controllers/cart.controller.js";
 import userController from "../controllers/user.controller.js";
-import { isAuth, isGuest, isUser, isAdmin } from "../middlewares/auth.middleware.js";
+import { isAuth, isGuest, isUser} from "../middlewares/auth.middleware.js";
 
 const viewsRouter = Router();
 
