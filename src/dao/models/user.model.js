@@ -1,5 +1,7 @@
+//Importaciones
 import mongoose from "mongoose";
 
+////Creación del schema de usuarios
 const userSchema = new mongoose.Schema({
   first_name: {
     type: String,
@@ -21,14 +23,25 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    default: "User"
-  }
+    enum: ["User", "Premium", "Admin"],
+    default: "User",
+  },
+  documents: {
+    type: [
+      {
+        name: String,
+        reference: String,
+      },
+    ],
+    default: [],
+  },
+  last_connection: Date,
 });
 
-userSchema.pre("find", function(){
-  this.populate("carts.cart")
-})
+//Uso de pre para popular el carrito de cada usuario
+userSchema.pre("find", function () {
+  this.populate("carts.cart");
+});
 
 const userModel = mongoose.model("users", userSchema);
-
 export default userModel;

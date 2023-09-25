@@ -1,51 +1,87 @@
+//Importaciones
 import { Router } from "express";
 import { io } from "../utils/server.util.js";
-import productController from "../controllers/product.controller.js"
-import { isAdmin } from "../middlewares/auth.middleware.js";
+import productController from "../controllers/product.controller.js";
+import { isPremiumOrAdmin } from "../middlewares/auth.middleware.js";
+import CustomErrors from "../utils/errors/CustomErrors.js";
+import { generateProdErrorInfo } from "../utils/errors/errorInfo.js";
+import ErrorIndex from "../utils/errors/ErrorIndex.js";
 
+//Creación del router de productos
 const productRouter = Router();
 
+//Obtener todos los productos
 productRouter.get("/", async (req, res) => {
   try {
     res.status(200).send(await productController.get());
   } catch (err) {
+    req.logger.error(`Error al obtener los productos: ${err}`);
     res.status(400).send(err);
   }
 });
 
+//Obtener por ID
 productRouter.get("/:pid", async (req, res) => {
   try {
     res.status(200).send(await productController.getById(req.params.pid));
   } catch (err) {
+    req.logger.error(`Error al obtener el producto por ID: ${err}`);
     res.status(400).send(err);
   }
 });
 
-productRouter.post("/", isAdmin, async (req, res) => {
+//Crear un nuevo producto (sólo siendo Admin o Premium)
+productRouter.post("/", isPremiumOrAdmin, async (req, res) => {
+  //Se obtiene el producto a crear y el usuario
+  const product = req.body;
+  const {user} = req.session;
   try {
-    res.status(201).send(await productController.add(req.body));
-    io.emit("newProd", req.body);
+    //Si el usuario que creó el producto es "Premium", se asigna su mail al creador del producto. Caso contrario, queda "Admin" por defecto
+    if (user.role === "Premium") {
+      product.owner = user.email;
+    }
+    res.status(201).send(await productController.add(product));
+    //Uso de socket para los productos en tiempo real
+    io.emit("newProd", product);
   } catch (err) {
-    res.status(400).send(err);
+    CustomErrors.createError(
+      "Product creation error",
+      generateProdErrorInfo(product),
+      "Campos incompletos",
+      ErrorIndex.INCOMPLETE_DATA
+    );
   }
 });
 
-productRouter.put("/:pid", isAdmin, async (req, res) => {
+//Actualizar un producto por su ID
+productRouter.put("/:pid", isPremiumOrAdmin, async (req, res) => {
   try {
+    console.log(req.body)
     res
       .status(201)
       .send(await productController.update(req.params.pid, req.body));
   } catch (err) {
+    req.logger.error(`Error al actualizar el producto por ID: ${err}`);
     res.status(400).send(err);
   }
 });
 
-productRouter.delete("/:pid", isAdmin, async (req, res) => {
+//Eliminar un producto por su ID
+productRouter.delete("/:pid", isPremiumOrAdmin, async (req, res) => {
+  const {user} = req.session
+  const product = await productController.getById(req.params.pid)
   try {
-    res.status(200).send(await productController.delete(req.params.pid));
-    io.emit("deletedProd", req.params.pid);
+    //Se valida que quien elimina el producto sea el "Admin" o que sea el mismo creador de ese producto
+    if (user.role === "Admin" || (user.role === "Premium" && user.email === product.owner)) {
+      res.status(200).send(await productController.delete(req.params.pid));
+      //Uso de socket para los productos en tiempo real
+      io.emit("deletedProd", req.params.pid);
+    } else {
+      res.status(403).send("No tiene permisos para eliminar este producto")
+    }
   } catch (err) {
-    res.status(400).send(err);
+    req.logger.error(`Error al eliminar el producto por ID: ${err}`);
+    res.status(401).send(err);
   }
 });
 

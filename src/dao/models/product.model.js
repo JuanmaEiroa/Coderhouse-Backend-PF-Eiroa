@@ -1,6 +1,8 @@
+//Importaciones
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
+//Creación del schema de productos
 const productSchema = mongoose.Schema({
     title: {
         type: String,
@@ -21,7 +23,8 @@ const productSchema = mongoose.Schema({
     },
     status: {
         type: Boolean,
-        required:true
+        required:true,
+        default:true,
     },
     stock: {
         type: Number,
@@ -31,9 +34,15 @@ const productSchema = mongoose.Schema({
         type: String,
         required:true
     },
+    owner: {
+        type: String,
+        required: true,
+        default: "Admin"
+    },
     thumbnail: String
 })
 
+//Uso de paginación para luego aplicarlo en el frontend
 productSchema.plugin(mongoosePaginate);
 
 export const productModel = mongoose.model("products", productSchema);

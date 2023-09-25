@@ -1,12 +1,15 @@
+//Importaciones
 import { productModel } from "../models/product.model.js";
 
+//Creación del DAO de productos
 export default class ProductMongoDAO {
   constructor() {
     this.collection = productModel;
   }
 
+  //Obtener los productos, permitiendo aplicar los filtros para mostrarlos en el frontend
   async get(
-    limit = 10,
+    limit = 5,
     page = 1,
     category = false,
     status = false,
@@ -19,6 +22,7 @@ export default class ProductMongoDAO {
     };
     let options = { lean: true, page, limit, sort, customLabels: labels };
 
+    //Filtros de categoría y status
     if (category) {
       filter = { ...filter, category };
     }
@@ -26,6 +30,7 @@ export default class ProductMongoDAO {
       filter = { ...filter, status };
     }
 
+    //Ordenamiento por precio (ascendente o descendente)
     if (sort === "asc") {
       options.sort = { price: 1 };
     }
@@ -36,14 +41,17 @@ export default class ProductMongoDAO {
     return await this.collection.paginate(filter, options);
   }
 
+  //Obtener por ID
   async getById(pid) {
     return await this.collection.findById(pid).lean();
   }
 
+  //Crear un nuevo producto
   async add(product) {
     return await this.collection.create(product);
   }
 
+  //Actualizar un producto por su ID
   async update(pid, product) {
     return await this.collection.findByIdAndUpdate(
       pid,
@@ -52,6 +60,7 @@ export default class ProductMongoDAO {
     );
   }
 
+  //Eliminar un producto por su ID
   async delete(pid) {
     return await this.collection.findByIdAndDelete(pid);
   }

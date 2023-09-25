@@ -1,29 +1,31 @@
-import ProductDTO from "../dto/product.dto.js";
-
+//Creación del repositorio de productos
 export default class ProductRepository {
   constructor(dao) {
     this.dao = dao;
   }
 
-  async get() {
-    return await this.dao.get();
+  //Obtener todos los productos con los filtros aplicados
+  async get(limit, page, category, status, sort) {
+    return await this.dao.get(limit, page, category, status, sort);
   }
 
+  //Obtener por ID
   async getById(id) {
-    const product = await this.dao.getById(id);
-    //const productDTO = new ProductDTO(product);
-    return product;
+    return await this.dao.getById(id);
   }
 
+  //Agregar un producto
   async add(product) {
     return await this.dao.add(product);
   }
 
+  //Actualizar un producto por su ID
   async update(pid, product) {
     return await this.dao.update(pid, product);
   }
 
-  async deleteProduct(pid) {
+  //Eliminar un producto por su ID
+  async delete(pid) {
     return await this.dao.delete(pid);
   }
 }

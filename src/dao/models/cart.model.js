@@ -1,5 +1,7 @@
+//Importaciones
 import mongoose from "mongoose";
 
+//Creación del schema de carritos
 const cartSchema = mongoose.Schema({
   products: {
     type: [
@@ -15,6 +17,7 @@ const cartSchema = mongoose.Schema({
   },
 });
 
+//Uso de pre para popular los productos del carrito
 cartSchema.pre("find", function(){
   this.populate("products.product")
 })

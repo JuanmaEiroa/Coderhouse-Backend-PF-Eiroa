@@ -1,3 +1,4 @@
+//Creación del DTO de tickets
 export default class TicketDTO {
   constructor(ticket) {
     this.id = ticket._id;

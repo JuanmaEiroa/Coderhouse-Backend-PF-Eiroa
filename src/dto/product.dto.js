@@ -1,3 +1,4 @@
+//Creación del DTO de productos
 export default class ProductDTO {
   constructor(product) {
     this.title = product.title,

@@ -1,6 +1,10 @@
+//FUNCIÓN PARA ELIMINAR PRODUCTOS DE CARRITO
 function deleteFromCart(pid) {
+  //Se obtiene id de carrito y se define como url param
   const cid = document.getElementById("cartId").value;
   const url = `/api/carts/${cid}/product/${pid}`;
+
+  //Método fetch con delete para eliminar producto
   fetch(url, {
     method: "DELETE",
   })
@@ -16,9 +20,13 @@ function deleteFromCart(pid) {
     });
 }
 
+//FUNCIÓN PARA FINALIZAR COMPRAS 
 function endPurchase (){
+  //Se obtiene id de carrito y se define como url param
     const cid = document.getElementById("cartId").value;
     const url = `/api/carts/${cid}/purchase`;
+
+    //Método fetch con post para enviar la compra
     fetch(url, {
       method: "POST",
     })

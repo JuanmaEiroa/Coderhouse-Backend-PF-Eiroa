@@ -1,19 +1,22 @@
 <nav id="navbar">
-  <p>Bienvenido,
-    {{userToShow.first_name}}
-    {{userToShow.last_name}}
-    <br />
-    {{userToShow.email}}
-    <br />
-    Rol:
-    {{userToShow.role}}
-  </p>
-  <input type="hidden" id="cartId" value="{{userToShow.cart}}" />
-  <a href="/products"><button class="navBtn">Ver Productos</button></a>
-  <a href="/chat"><button class="navBtn">Chat</button></a>
-  <form action="/api/users/logout" method="post">
-    <button type="submit">Cerrar sesión</button>
-  </form>
+  <img id="logoImg" src="/assets/logo.png" />
+  <div class="navBarInfo">
+    <p>Bienvenido,
+      {{userToShow.first_name}}
+      {{userToShow.last_name}}
+      <br />
+      {{userToShow.email}}
+      <br />
+      Rol:
+      {{userToShow.role}}
+    </p>
+    <input type="hidden" id="cartId" value="{{userToShow.cart}}" />
+    <a href="/products"><button class="navBtn">Ver Productos</button></a>
+    <a href="/chat"><button class="navBtn">Chat</button></a>
+    <form action="/api/users/logout" method="post">
+      <button type="submit">Cerrar sesión</button>
+    </form>
+  </div>
 </nav>
 <h1>Datos del Usuario</h1>
 <div class="userData">
@@ -32,8 +35,22 @@
   <br />
   {{userToShow.img}}
 </div>
+<div class="fileUploader">
+  <form action="/api/users/{{userToShow.id}}/documents" method="post" enctype="multipart/form-data">
+    <label for="idFile">Identificación: </label><input type="file" name="idFile" id="idFile"/>
+    <br/>
+    <label for="idFile">Comprobante de domicilio: </label><input type="file" name="addressCompFile" id="addressCompFile"/>
+    <br/>
+    <label for="idFile">Comprobante de estado de cuenta: </label><input type="file" name="accountCompFile" id="accountCompFile"/>
+    <br/>
+    <input type="submit" />
+  </form>
+</div>
 <h2>Mi Carrito</h2>
 <br />
+{{#if cartEmpty}}
+<h3 class="emptyCartMsg">El carrito está vacío</h3>
+{{else}}
 <div class="tableContainer">
   <table class="productTable">
     <th>Nombre</th>
@@ -60,5 +77,6 @@
 <div class="endPurchCont">
   <button class="endPurchBtn" onclick="endPurchase()">Finalizar Compra</button>
 </div>
+{{/if}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/cart.js"></script>

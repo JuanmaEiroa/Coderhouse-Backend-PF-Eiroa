@@ -1,3 +1,4 @@
+//Importaciones
 import { Server } from "socket.io";
 import express from "express";
 import { appConfig } from "../config/env.config.js";

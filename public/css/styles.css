@@ -1,3 +1,4 @@
+/* INICIO CSS GENERAL */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -20,6 +21,53 @@ h2 {
 
 h4 {
   display: inline;
+}
+
+/* INICIO CSS NAVBAR */
+
+#navbar {
+  background-color: #178582;
+  color: whitesmoke;
+  text-align: right;
+  padding-right: 20px;
+  height: 120px;
+  margin-bottom: 10px;
+  border-bottom: 5px solid #183b3a;
+  display: flex;
+  justify-content: space-between;
+}
+
+#navbar p {
+  margin: 0;
+}
+
+#navbar button {
+  background-color: red;
+  color: whitesmoke;
+  border: none;
+  height: 1.5em;
+  box-shadow: 1px 3px 3px black;
+}
+
+#navbar button:hover {
+  cursor: pointer;
+}
+
+#logoImg {
+  height: 80%;
+  align-self: center;
+}
+
+.navBtn {
+  background-color: darkolivegreen !important;
+}
+
+
+/* INICIO CSS PRODUCTOS */
+
+.filterCont {
+  margin-bottom: 10px;
+  text-align: right;
 }
 
 .tableContainer {
@@ -45,6 +93,44 @@ td {
   padding-inline: 10px;
   border-bottom: dashed black 1px;
 }
+
+/* INICIO CSS PANEL PRODUCTOS */
+.prodManagerPanel{
+  border: 2px black solid;
+  text-align: center;
+  background-color: aliceblue;
+  width: 40%;
+  margin: 10px auto;
+}
+
+.prodManagerPanel h2{
+  margin-block: 10px;
+}
+
+.prodManagCont label {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 5px;
+}
+
+.addProdForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.prodManagCont{
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.prodManagCont input,
+.prodManagCont textarea {
+  margin-bottom: 10px;
+}
+
+/* INICIO CSS CHAT */
 
 #chatTitle {
   text-align: center;
@@ -82,12 +168,14 @@ td {
   font-weight: 800;
 }
 
+/* INICIO CSS LOGIN Y REGISTER */
+
 #loginForm {
   text-align: center;
   border: 3px dotted gray;
   width: 250px;
   margin: 50px auto;
-  height: 300px;
+  height: 350px;
   padding-top: 25px;
 }
 
@@ -96,7 +184,7 @@ td {
   height: 40px;
 }
 
-.formInput:not(:last-child) {
+.formInput:not(:last-child), .recovInput:not(:last-child) {
   margin-bottom: 10px;
 }
 
@@ -138,44 +226,28 @@ td {
   width: 400px;
 }
 
-#navbar {
-  background-color: #178582;
-  color: whitesmoke;
-  text-align: right;
-  padding-right: 20px;
-  height: 120px;
-  margin-bottom: 10px;
-  border-bottom: 5px solid #183b3a;
-}
 
-#navbar p {
-  margin: 0;
-}
-
-#navbar button {
-  background-color: red;
-  color: whitesmoke;
-  border: none;
-  height: 1.5em;
-  box-shadow: 1px 3px 3px black;
-}
-
-#navbar button:hover {
-  cursor: pointer;
-}
-
-.navBtn {
-  background-color: darkolivegreen !important;
-}
-
-.userData {
+/* INICIO CSS PURCHASE / CURRENT */
+.userData, .fileUploader {
   margin-inline: auto;
   margin-block: 20px;
   padding-block: 20px;
   border: #183b3a solid 2px;
   background-color: aliceblue;
-  width: 15%;
+  width: 300px;
   text-align: center;
+}
+
+.fileUploader{
+  width: 600px;
+}
+
+.emptyCartMsg {
+  background-color: aliceblue;
+  text-align: center;
+  border: 2px dashed black;
+  width: 500px;
+  margin: auto;
 }
 
 .endPurchCont {
@@ -194,4 +266,26 @@ td {
 
 .endPurchBtn:hover {
   cursor:pointer;
+}
+
+/* INICIO CSS PASS RECOVERY */
+
+#recovForm {
+  text-align: center;
+  border: 3px dotted gray;
+  width: 500px;
+  margin: 50px auto;
+  height: 300px;
+  padding-top: 25px;
+}
+
+.recovDescription {
+  padding-bottom: 20px;
+  font-weight: bold;
+}
+
+.recovInput {
+  background-color: blanchedalmond;
+  height: 40px;
+  width: 300px;
 }
