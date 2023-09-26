@@ -33,50 +33,78 @@
   <br />
   <h4>Foto de Perfil: </h4>
   <br />
-  {{userToShow.img}}
+  <img src="/data/images/profiles/{{userToShow.img}}" alt="Profile Image" />
+    <form
+      action="/api/users/{{userToShow.id}}/profImg"
+      method="post"
+      enctype="multipart/form-data"
+    >
+  <div class="profImgChange">
+      <h4>Cambiar foto de perfil</h4>
+      <input type="file" name="profImg" id="profImg" />
+      <input type="submit" value="Cambiar imagen de perfil" class="changeProfBtn"/>
+  </div>
+    </form>
 </div>
 <div class="fileUploader">
-  <form action="/api/users/{{userToShow.id}}/documents" method="post" enctype="multipart/form-data">
-    <label for="idFile">Identificación: </label><input type="file" name="idFile" id="idFile"/>
-    <br/>
-    <label for="idFile">Comprobante de domicilio: </label><input type="file" name="addressCompFile" id="addressCompFile"/>
-    <br/>
-    <label for="idFile">Comprobante de estado de cuenta: </label><input type="file" name="accountCompFile" id="accountCompFile"/>
-    <br/>
+  <h3>Carga de archivos</h3>
+  <form
+    action="/api/users/{{userToShow.id}}/documents"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <label for="idFile">Identificación: </label><input
+      type="file"
+      name="idFile"
+      id="idFile"
+    />
+    <br />
+    <label for="idFile">Comprobante de domicilio: </label><input
+      type="file"
+      name="addressCompFile"
+      id="addressCompFile"
+    />
+    <br />
+    <label for="idFile">Comprobante de estado de cuenta: </label><input
+      type="file"
+      name="accountCompFile"
+      id="accountCompFile"
+    />
+    <br />
     <input type="submit" />
   </form>
 </div>
 <h2>Mi Carrito</h2>
 <br />
 {{#if cartEmpty}}
-<h3 class="emptyCartMsg">El carrito está vacío</h3>
+  <h3 class="emptyCartMsg">El carrito está vacío</h3>
 {{else}}
-<div class="tableContainer">
-  <table class="productTable">
-    <th>Nombre</th>
-    <th>Descripción</th>
-    <th>Código</th>
-    <th>Precio</th>
-    <th>Cantidad</th>
-    <th>Categoría</th>
-    {{#each cart.products}}
-      <tr>
-        <td>{{this.product.title}}</td>
-        <td>{{this.product.description}}</td>
-        <td>{{this.product.code}}</td>
-        <td>{{this.product.price}}</td>
-        <td>{{this.quantity}}</td>
-        <td>{{this.product.category}}</td>
-        <td><button onclick="deleteFromCart('{{this.product._id}}')">Eliminar
-            producto</button></td>
-      </tr>
-    {{/each}}
-  </table>
-  <br />
-</div>
-<div class="endPurchCont">
-  <button class="endPurchBtn" onclick="endPurchase()">Finalizar Compra</button>
-</div>
+  <div class="tableContainer">
+    <table class="productTable">
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Código</th>
+      <th>Precio</th>
+      <th>Cantidad</th>
+      <th>Categoría</th>
+      {{#each cart.products}}
+        <tr>
+          <td>{{this.product.title}}</td>
+          <td>{{this.product.description}}</td>
+          <td>{{this.product.code}}</td>
+          <td>{{this.product.price}}</td>
+          <td>{{this.quantity}}</td>
+          <td>{{this.product.category}}</td>
+          <td><button onclick="deleteFromCart('{{this.product._id}}')">Eliminar
+              producto</button></td>
+        </tr>
+      {{/each}}
+    </table>
+    <br />
+  </div>
+  <div class="endPurchCont">
+    <button class="endPurchBtn" onclick="endPurchase()">Finalizar Compra</button>
+  </div>
 {{/if}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/cart.js"></script>

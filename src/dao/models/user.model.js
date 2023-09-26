@@ -1,7 +1,7 @@
 //Importaciones
 import mongoose from "mongoose";
 
-////Creación del schema de usuarios
+//Creación del schema de usuarios
 const userSchema = new mongoose.Schema({
   first_name: {
     type: String,
@@ -16,7 +16,10 @@ const userSchema = new mongoose.Schema({
   },
   password: String,
   age: Number,
-  img: String,
+  img: {
+    type: String,
+    default: "noImg.jpeg"
+  },
   cart: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "carts",

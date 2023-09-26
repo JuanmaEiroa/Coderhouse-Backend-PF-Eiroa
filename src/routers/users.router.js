@@ -110,12 +110,30 @@ userRouter.post(
           reference: req.files.accountCompFile[0].path,
         });
       }
-      await userController.update(req.params.uid, user)
+      await userController.update(req.params.uid, user);
       req.logger.info("Archivos subidos correctamente!");
       res.status(201).send("Archivos subidos correctamente!");
     } catch (error) {
       req.logger.error(`Error interno al subir documentos: ${err}`);
       res.status(500).send(`Error interno al subir documentos: ${err}`);
+    }
+  }
+);
+
+//Carga de imagen de perfil con Multer
+userRouter.post(
+  "/:uid/profImg",
+  multerGenerator("/public/data/images/profiles", ".jpg").single("profImg"),
+  async (req, res) => {
+    try {
+      const user = await userController.getById(req.params.uid);
+      user.img = req.file.filename;
+      await userController.update(req.params.uid, user);
+      req.logger.info("Imagen de perfil actualizada!");
+      res.status(201).send("Imagen de perfil actualizada!");
+    } catch (error) {
+      req.logger.error(`Error interno al actualizar la foto de perfil: ${err}`);
+      res.status(500).send(`Error interno al actualizar la foto de perfil: ${err}`);
     }
   }
 );

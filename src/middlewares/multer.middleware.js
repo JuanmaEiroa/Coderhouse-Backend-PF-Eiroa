@@ -9,7 +9,7 @@ export const multerGenerator = (destination, extension) => {
       cb(null, path.join(process.cwd() + destination));
     },
     filename: (req, file, cb) => {
-      cb(null, file.originalname + extension);
+      cb(null, req.user.last_name + "_" + file.originalname + extension);
     },
   });
 

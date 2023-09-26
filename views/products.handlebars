@@ -50,6 +50,7 @@
   </div>
   <table class="productTable">
     <th>ID</th>
+    <th>Imagen</th>
     <th>Nombre</th>
     <th>Descripción</th>
     <th>Código</th>
@@ -59,6 +60,7 @@
     {{#each prodList.payload}}
       <tr>
         <td>{{this._id}}</td>
+        <td><img src="/data/images/products/{{this.thumbnail}}" alt="Product Image"/></td>
         <td>{{this.title}}</td>
         <td>{{this.description}}</td>
         <td>{{this.code}}</td>
@@ -91,7 +93,7 @@
     <h2>Panel de Productos</h2>
     <div class="prodManagCont">
       <h4>Agregar un producto</h4>
-      <form class="addProdForm" method="post" action="/api/products">
+      <form class="addProdForm" method="post" action="/api/products" enctype="multipart/form-data">
         <label for="title">Nombre del producto:</label>
         <input
           name="title"
@@ -111,11 +113,10 @@
         <input name="stock" type="number" placeholder="Inserte el stock" />
         <label for="category">Categoría:</label>
         <input name="category" type="text" placeholder="Inserte la categoría" />
-        <label for="thumbnail">Imagen en URL:</label>
+        <label for="thumbnail">Imagen:</label>
         <input
           name="thumbnail"
-          type="text"
-          placeholder="Inserte URL de la imagen"
+          type="file"
         />
         <input type="submit" value="Agregar Producto"/>
       </form>

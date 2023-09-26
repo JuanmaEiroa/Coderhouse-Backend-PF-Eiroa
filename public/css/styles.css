@@ -95,6 +95,13 @@ td {
   border-bottom: dashed black 1px;
 }
 
+td img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: #333 solid 2px;
+}
+
 /* INICIO CSS PANEL PRODUCTOS */
 .prodManagerPanel{
   border: 2px black solid;
@@ -234,8 +241,31 @@ td {
   padding-block: 20px;
   border: #183b3a solid 2px;
   background-color: aliceblue;
-  width: 300px;
+  width: 400px;
   text-align: center;
+}
+
+.userData img {
+  width: 100px;
+  border: #333 solid;
+  border-radius: 50%;
+}
+
+.noProfImg {
+  font-style: italic;
+  text-decoration: underline;
+  color: red;
+}
+
+.profImgChange {
+  width: 350px;
+  text-align: center;
+  margin: 10px auto;
+  border: #333 dashed 1px;
+}
+
+.changeProfBtn {
+  margin-block: 10px;
 }
 
 .fileUploader{
@@ -262,6 +292,7 @@ td {
   height: 3em;
   box-shadow: 1px 3px 3px black;
   width: 200px;
+  margin-bottom: 20px;
 }
 
 .endPurchBtn:hover {
