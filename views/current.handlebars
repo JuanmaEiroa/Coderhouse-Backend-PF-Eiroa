@@ -82,6 +82,7 @@
   <div class="tableContainer">
     <table class="productTable">
       <th>Nombre</th>
+      <th>Imagen</th>
       <th>Descripción</th>
       <th>Código</th>
       <th>Precio</th>
@@ -90,6 +91,7 @@
       {{#each cart.products}}
         <tr>
           <td>{{this.product.title}}</td>
+          <td><img src="/data/images/products/{{this.product.thumbnail}}" alt="Product Image"/></td>
           <td>{{this.product.description}}</td>
           <td>{{this.product.code}}</td>
           <td>{{this.product.price}}</td>
