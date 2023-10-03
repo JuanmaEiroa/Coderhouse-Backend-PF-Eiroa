@@ -12,12 +12,17 @@ userRouter.post(
   "/",
   passport.authenticate("register", { failureRedirect: "/registererror" }),
   async (req, res) => {
-    res.redirect("/");
+    try {
+      res.redirect("/");
+    } catch (error) {
+      req.logger.error(`Error interno al registrarse: ${err}`);
+      res.status(500).send(`Error interno al registrarse: ${err}`);
+    }
   }
 );
 
 //Error de registro con passport
-userRouter.get("/registererror", async (req, res) => {
+userRouter.get("/registererror", (req, res) => {
   res.send({ error: "Error de estrategia al registrarse" });
 });
 
@@ -26,15 +31,20 @@ userRouter.post(
   "/auth",
   passport.authenticate("login", { failureRedirect: "/loginerror" }),
   async (req, res) => {
-    if (!req.user) {
-      return res
-        .status(400)
-        .send({ status: "error", error: "Credenciales inválidas" });
+    try {
+      if (!req.user) {
+        return res
+          .status(400)
+          .send({ status: "error", error: "Credenciales inválidas" });
+      }
+      const user = req.user;
+      delete user.password;
+      req.session.user = user;
+      res.redirect("/");
+    } catch (err) {
+      req.logger.error(`Error interno al iniciar sesión: ${err}`);
+      res.status(500).send(`Error interno al iniciar sesión: ${err}`);
     }
-    const user = req.user;
-    delete user.password;
-    req.session.user = user;
-    res.redirect("/");
   }
 );
 
@@ -49,8 +59,13 @@ userRouter.get(
   "/githubcallback",
   passport.authenticate("github", { failureRedirect: "/login" }),
   async (req, res) => {
-    req.session.user = req.user;
-    res.redirect("/");
+    try {
+      req.session.user = req.user;
+      res.redirect("/");
+    } catch (err) {
+      req.logger.error(`Error interno al iniciar sesión con GitHub: ${err}`);
+      res.status(500).send(`Error interno al iniciar sesión con GitHub: ${err}`);
+    }
   }
 );
 
@@ -61,12 +76,17 @@ userRouter.get("/loginerror", (req, res) => {
 
 //Cierre de sesión
 userRouter.post("/logout", async (req, res) => {
-  const uid = req.session.user._id;
-  const user = await userController.getById(uid);
-  user.last_connection = new Date();
-  await userController.update(uid, user);
-  req.session.destroy();
-  res.status(201).redirect("/");
+  try{
+    const uid = req.session.user._id;
+    const user = await userController.getById(uid);
+    user.last_connection = new Date();
+    await userController.update(uid, user);
+    req.session.destroy();
+    res.status(201).redirect("/");
+  } catch (err) {
+    req.logger.error(`Error interno al cerrar sesión: ${err}`);
+    res.status(500).send(`Error interno al cerrar sesión: ${err}`);
+  }
 });
 
 //Cambio de rol de usuario (User-Premium)

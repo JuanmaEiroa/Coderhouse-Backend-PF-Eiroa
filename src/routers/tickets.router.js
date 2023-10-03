@@ -11,7 +11,7 @@ ticketRouter.get("/", async (req, res) => {
     res.status(200).send(await ticketController.get());
   } catch (err) {
     req.logger.error(`Error al obtener los tickets: ${err}`);
-    res.status(400).send(err);
+    res.status(400).send(`Error al obtener los tickets: ${err}`);
   }
 });
 
@@ -21,7 +21,7 @@ ticketRouter.get("/:tcode", async (req, res) => {
     res.status(200).send(await ticketController.getByCode(req.params.tcode));
   } catch (err) {
     req.logger.error(`Error al obtener el ticket por ID: ${err}`);
-    res.status(400).send(err);
+    res.status(400).send(`Error al obtener el ticket por ID: ${err}`);
   }
 });
 
@@ -31,7 +31,7 @@ ticketRouter.post("/", async (req, res) => {
     res.status(201).send(await ticketController.add(req.body));
   } catch (err) {
     req.logger.error(`Error al crear un ticket: ${err}`);
-    res.status(400).send(err);
+    res.status(400).send(`Error al crear un ticket: ${err}`);
   }
 });
 
@@ -41,7 +41,7 @@ ticketRouter.delete("/:tid", async (req, res) => {
     res.status(200).send(await ticketController.delete(req.params.mid));
   } catch (err) {
     req.logger.error(`Error al eliminar un ticket: ${err}`);
-    res.status(400).send(err);
+    res.status(400).send(`Error al eliminar un ticket: ${err}`);
   }
 });
 

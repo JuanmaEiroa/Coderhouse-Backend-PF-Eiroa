@@ -14,7 +14,7 @@ cartRouter.get("/", async (req, res) => {
     res.status(200).send(await cartController.get());
   } catch (err) {
     req.logger.error(`Error al obtener todos los carritos: ${err}`)
-    res.status(500).send(err);
+    res.status(500).send(`Error al obtener todos los carritos: ${err}`);
   }
 });
 
@@ -24,7 +24,7 @@ cartRouter.get("/:cid", async (req, res) => {
     res.status(200).send(await cartController.getById(req.params.cid));
   } catch (err) {
     req.logger.error(`Error al obtener el carrito por ID: ${err}`)
-    res.status(500).send(err);
+    res.status(500).send(`Error al obtener el carrito por ID: ${err}`);
   }
 });
 
@@ -34,7 +34,7 @@ cartRouter.post("/", async (req, res) => {
     res.status(201).send(await cartController.add(req.body));
   } catch (err) {
     req.logger.error(`Error al crear carrito: ${err}`)
-    res.status(500).send(err);
+    res.status(500).send(`Error al crear carrito: ${err}`);
   }
 });
 
@@ -44,7 +44,7 @@ cartRouter.put("/:cid", async (req, res) => {
     res.status(201).send(await cartController.update(req.params.cid, req.body));
   } catch (err) {
     req.logger.error(`Error al actualizar carrito por ID: ${err}`)
-    res.status(500).send(err);
+    res.status(500).send(`Error al actualizar carrito por ID: ${err}`);
   }
 });
 
@@ -54,7 +54,7 @@ cartRouter.delete("/:cid", async (req, res) => {
     res.status(200).send(await cartController.deleteAllProds(req.params.cid));
   } catch (err) {
     req.logger.error(`Error al eliminar carrito por ID: ${err}`)
-    res.status(500).send(err);
+    res.status(500).send(`Error al eliminar carrito por ID: ${err}`);
   }
 });
 
@@ -71,7 +71,7 @@ cartRouter.post("/:cid/product/:pid", isUserOrPremium, async (req, res) => {
     }
   } catch (err) {
     req.logger.error(`Error al agregar el producto al carrito: ${err}`)
-    res.status(500).send(err);
+    res.status(500).send(`Error al agregar el producto al carrito: ${err}`);
   }
 });
 
@@ -85,7 +85,7 @@ cartRouter.delete("/:cid/product/:pid", async (req, res) => {
       );
   } catch (err) {
     req.logger.error(`Error al eliminar el producto del carrito: ${err}`)
-    res.status(500).send(err);
+    res.status(500).send(`Error al eliminar el producto del carrito: ${err}`);
   }
 });
 
@@ -103,7 +103,7 @@ cartRouter.put("/:cid/product/:pid", async (req, res) => {
       );
   } catch (err) {
     req.logger.error(`Error al actualizar el producto del carrito: ${err}`)
-    res.status(500).send(err);
+    res.status(500).send(`Error al actualizar el producto del carrito: ${err}`);
   }
 });
 
@@ -113,8 +113,8 @@ cartRouter.post("/:cid/purchase", async (req, res) => {
     const { user } = req.session;
     res.status(201).send(await purchaseController.endPurchase(req.params.cid, user))
   } catch (err) {
-    req.logger.error(`Error al finalizar la compra: ${err}`)
-    res.status(500).send(err);
+    req.logger.error(`Error interno al finalizar la compra: ${err}`)
+    res.status(500).send(`Error interno al finalizar la compra: ${err}`);
   }
 });
 
