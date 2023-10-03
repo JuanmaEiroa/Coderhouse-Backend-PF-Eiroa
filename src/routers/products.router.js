@@ -17,7 +17,7 @@ productRouter.get("/", async (req, res) => {
     res.status(200).send(await productController.get());
   } catch (err) {
     req.logger.error(`Error al obtener los productos: ${err}`);
-    res.status(400).send(err);
+    res.status(400).send(`Error al obtener los productos: ${err}`);
   }
 });
 
@@ -27,34 +27,9 @@ productRouter.get("/:pid", async (req, res) => {
     res.status(200).send(await productController.getById(req.params.pid));
   } catch (err) {
     req.logger.error(`Error al obtener el producto por ID: ${err}`);
-    res.status(400).send(err);
+    res.status(400).send(`Error al obtener el producto por ID: ${err}`);
   }
 });
-
-/*
-//Crear un nuevo producto (sólo siendo Admin o Premium) - SIN MULTER
-productRouter.post("/", isPremiumOrAdmin, async (req, res) => {
-  //Se obtiene el producto a crear y el usuario
-  const product = req.body;
-  const {user} = req.session;
-  try {
-    //Si el usuario que creó el producto es "Premium", se asigna su mail al creador del producto. Caso contrario, queda "Admin" por defecto
-    if (user.role === "Premium") {
-      product.owner = user.email;
-    }
-    res.status(201).send(await productController.add(product));
-    //Uso de socket para los productos en tiempo real
-    io.emit("newProd", product);
-  } catch (err) {
-    CustomErrors.createError(
-      "Product creation error",
-      generateProdErrorInfo(product),
-      "Campos incompletos",
-      ErrorIndex.INCOMPLETE_DATA
-    );
-  }
-});
-*/
 
 //Crear un nuevo producto (sólo siendo Admin o Premium) - CON MULTER
 productRouter.post(
@@ -94,7 +69,7 @@ productRouter.put("/:pid", isPremiumOrAdmin, async (req, res) => {
       .send(await productController.update(req.params.pid, req.body));
   } catch (err) {
     req.logger.error(`Error al actualizar el producto por ID: ${err}`);
-    res.status(400).send(err);
+    res.status(400).send(`Error al actualizar el producto por ID: ${err}`);
   }
 });
 
@@ -116,7 +91,7 @@ productRouter.delete("/:pid", isPremiumOrAdmin, async (req, res) => {
     }
   } catch (err) {
     req.logger.error(`Error al eliminar el producto por ID: ${err}`);
-    res.status(401).send(err);
+    res.status(401).send(`Error al eliminar el producto por ID: ${err}`);
   }
 });
 

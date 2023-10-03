@@ -15,7 +15,7 @@ loggerRouter.get("/", (req, res) => {
     req.logger.debug("Esto es un informe de debug");
     res.send({ message: "Prueba de loggers" });
   } catch (error) {
-    req.logger.fatal("Error de carga de loggers");
+    req.logger.fatal("Error interno de carga de loggers");
     res.status(500).send("ERROR: ", error)
   }
 });
