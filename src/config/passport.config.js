@@ -1,5 +1,4 @@
 //Importaciones
-//Importaciones
 import passport from "passport";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
@@ -9,10 +8,8 @@ import { encryptPassword, comparePassword } from "../utils/encrypt.util.js";
 import { appConfig } from "./env.config.js";
 
 //ESTRATEGIA LOCAL CON PASSPORT
-//ESTRATEGIA LOCAL CON PASSPORT
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
-  //ESTRATEGIA PARA REGISTER
   //ESTRATEGIA PARA REGISTER
   passport.use(
     "register",
