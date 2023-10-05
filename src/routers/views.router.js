@@ -10,20 +10,22 @@ import {
   isUser,
   isUserOrPremium,
 } from "../middlewares/auth.middleware.js";
+import { verifyToken } from "../middlewares/jwt.middleware.js";
 
 //Creación de router de vistas
 const viewsRouter = Router();
 
-viewsRouter.get("/", isGuest, (req, res) => {
+viewsRouter.get("/", verifyToken, isGuest, (req, res) => {
   res.render("login", {
     title: "Iniciar sesión",
   });
 });
 
 //Vista de productos (usando filtros y paginación)
-viewsRouter.get("/products", isAuth, async (req, res) => {
+viewsRouter.get("/products", verifyToken, isAuth, async (req, res) => {
   //Obtención del usuario
-  const { user } = req.session;
+  const user = await userController.getById(req.user._id);
+  req.user = user;
   delete user.password;
   //Configuración de filtros
   const { limit, page, category, availability, sort } = req.query;
@@ -38,6 +40,7 @@ viewsRouter.get("/products", isAuth, async (req, res) => {
   prodList.category = category;
   prodList.availability = availability;
   prodList.sort = sort;
+
   //Configuración para paginación
   prodList.prevLink = prodList.hasPrevPage
     ? `products?page=${prodList.prevPage}`
@@ -58,15 +61,15 @@ viewsRouter.get("/products", isAuth, async (req, res) => {
 });
 
 //Vista de productos en tiempo real con socket
-viewsRouter.get("/realtimeproducts", isAuth, async (req, res) => {
+viewsRouter.get("/realtimeproducts", verifyToken, isAuth, async (req, res) => {
   const prodList = await productController.get();
   res.render("realTimeProducts", { prodList });
 });
 
 //Vista del chat
-viewsRouter.get("/chat", isAuth, isUser, async (req, res) => {
+viewsRouter.get("/chat", verifyToken, isAuth, isUser, async (req, res) => {
   const renderMessages = await messageController.get();
-  const { user } = req.session;
+  const user = req.user;
   res.render("chat", { title: "CoderChat", renderMessages, user });
 });
 
@@ -92,8 +95,8 @@ viewsRouter.get("/loginerror", (req, res) => {
 });
 
 //Vista de carrito actual y datos del usuario
-viewsRouter.get("/current", isAuth, isUserOrPremium, async (req, res) => {
-  const { user } = req.session;
+viewsRouter.get("/current", verifyToken, isAuth, isUserOrPremium, async (req, res) => {
+  const user = req.user;
   const cart = await cartController.getById(user.cart);
   const cartEmpty = cart.products.length < 1 ? true : false;
   const userToShow = await userController.getById(user._id);
@@ -106,8 +109,8 @@ viewsRouter.get("/current", isAuth, isUserOrPremium, async (req, res) => {
 });
 
 //Vista de finalización de compra
-viewsRouter.get("/purchase", isAuth, async (req, res) => {
-  const { user } = req.session;
+viewsRouter.get("/purchase", verifyToken, isAuth, async (req, res) => {
+  const user = req.user;
   const userToShow = await userController.getById(user._id);
   res.render("purchase", {
     title: "Compra Finalizada",

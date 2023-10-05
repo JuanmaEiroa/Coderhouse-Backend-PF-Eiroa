@@ -1,7 +1,7 @@
 //FUNCIONES PARA AUTENTICACIÓN DE USUARIO
 //Chequeo si el usuario está autenticado para acceder a la aplicación. Caso contrario, se envía al login.
 export function isAuth(req, res, next) {
-  if (req.session.user) {
+  if (req.user) {
     next();
   } else {
     res.redirect("/");
@@ -10,7 +10,7 @@ export function isAuth(req, res, next) {
 
 //Chequeo si el usuario no está autenticado para enviarlo al login. Caso contrario, accede a la aplicación.
 export function isGuest(req, res, next) {
-  if (!req.session.user) {
+  if (!req.user) {
     next();
   } else {
     res.redirect("/products");
@@ -20,7 +20,7 @@ export function isGuest(req, res, next) {
 //FUNCION PARA VALIDACION DE ENDPOINTS
 //Admin
 export function isAdmin(req, res, next) {
-  const { user } = req.session;
+  const user = req.user;
   if (user && user.role === "Admin") {
     next();
   } else {
@@ -32,7 +32,7 @@ export function isAdmin(req, res, next) {
 
 //Premium
 export function isPremium(req, res, next) {
-  const { user } = req.session;
+  const user = req.user;
   if (user && user.role === "Premium") {
     next();
   } else {
@@ -44,7 +44,7 @@ export function isPremium(req, res, next) {
 
 //User
 export function isUser(req, res, next) {
-  const { user } = req.session;
+  const user = req.user;
   if (user && user.role === "User") {
     next();
   } else {
@@ -56,7 +56,7 @@ export function isUser(req, res, next) {
 
 //Premium/Admin
 export function isPremiumOrAdmin (req,res,next) {
-  const {user} = req.session;
+  const user = req.user;
   if (user.role === "Premium" || user.role === "Admin") {
     next()
   } else {
@@ -66,7 +66,7 @@ export function isPremiumOrAdmin (req,res,next) {
 
 //User/Premium
 export function isUserOrPremium (req,res,next) {
-  const {user} = req.session;
+  const user = req.user;
   if (user.role === "User" || user.role === "Premium") {
     next()
   } else {

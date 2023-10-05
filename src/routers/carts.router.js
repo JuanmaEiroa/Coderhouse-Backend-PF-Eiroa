@@ -4,6 +4,7 @@ import cartController from "../controllers/cart.controller.js";
 import { isUserOrPremium } from "../middlewares/auth.middleware.js";
 import purchaseController from "../controllers/purchase.controller.js";
 import productController from "../controllers/product.controller.js";
+import { verifyToken } from "../middlewares/jwt.middleware.js";
 
 //Creación del router de carritos
 const cartRouter = Router();
@@ -59,8 +60,8 @@ cartRouter.delete("/:cid", async (req, res) => {
 });
 
 //Agregar un producto al carrito por ID
-cartRouter.post("/:cid/product/:pid", isUserOrPremium, async (req, res) => {
-  const {user} = req.session;
+cartRouter.post("/:cid/product/:pid", verifyToken, isUserOrPremium, async (req, res) => {
+  const user = req.user;
   const product = await productController.getById(req.params.pid)
   try {
     //Se valida que el usuario sea "User" o que, si es "Premium", el producto NO haya sido creado por el
@@ -76,7 +77,7 @@ cartRouter.post("/:cid/product/:pid", isUserOrPremium, async (req, res) => {
 });
 
 //Eliminar un producto del carrito por ID
-cartRouter.delete("/:cid/product/:pid", async (req, res) => {
+cartRouter.delete("/:cid/product/:pid", verifyToken, async (req, res) => {
   try {
     res
       .status(201)
@@ -90,7 +91,7 @@ cartRouter.delete("/:cid/product/:pid", async (req, res) => {
 });
 
 //Actualizar un producto del carrito por su ID
-cartRouter.put("/:cid/product/:pid", async (req, res) => {
+cartRouter.put("/:cid/product/:pid", verifyToken, async (req, res) => {
   try {
     res
       .status(201)
@@ -108,9 +109,9 @@ cartRouter.put("/:cid/product/:pid", async (req, res) => {
 });
 
 //Finalizar la compra
-cartRouter.post("/:cid/purchase", async (req, res) => {
+cartRouter.post("/:cid/purchase", verifyToken, async (req, res) => {
   try {
-    const { user } = req.session;
+    const user = req.user;
     res.status(201).send(await purchaseController.endPurchase(req.params.cid, user))
   } catch (err) {
     req.logger.error(`Error interno al finalizar la compra: ${err}`)

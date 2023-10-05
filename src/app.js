@@ -25,13 +25,13 @@ import passport from "passport";
 import cookieParser from "cookie-parser";
 import initializePassport from "./config/passport.config.js";
 
-//Controller para chat
-import messageController from "./controllers/message.controller.js";
-
 //Utils y Middlewares
 import { appConfig } from "./config/env.config.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import { addEnvLogger } from "./middlewares/logger.middleware.js";
+
+//Controller para chat
+import messageController from "./controllers/message.controller.js";
 
 //Documentación de APIs
 import swaggerJsdoc from "swagger-jsdoc";
@@ -51,7 +51,7 @@ app.set("view engine", "handlebars");
 app.use(express.static(path.join(process.cwd() + "/public")));
 
 //Configuración de login y session
-app.use(cookieParser());
+app.use(cookieParser(appConfig.cookieSecret));
 app.use(
   session({
     store: MongoStore.create({
@@ -67,7 +67,7 @@ app.use(
 );
 initializePassport();
 app.use(passport.initialize());
-app.use(passport.session());
+
 
 //Configuración de DB
 mongoose.connect(appConfig.mongoUrl, { dbName: appConfig.mongoDbName });

@@ -7,6 +7,7 @@ import CustomErrors from "../utils/errors/CustomErrors.js";
 import { generateProdErrorInfo } from "../utils/errors/errorInfo.js";
 import ErrorIndex from "../utils/errors/ErrorIndex.js";
 import { multerGenerator } from "../middlewares/multer.middleware.js";
+import { verifyToken } from "../middlewares/jwt.middleware.js";
 
 //Creación del router de productos
 const productRouter = Router();
@@ -33,14 +34,14 @@ productRouter.get("/:pid", async (req, res) => {
 
 //Crear un nuevo producto (sólo siendo Admin o Premium) - CON MULTER
 productRouter.post(
-  "/",
+  "/", verifyToken,
   isPremiumOrAdmin,
   multerGenerator("/public/data/images/products", ".jpg").single("thumbnail"),
   async (req, res) => {
     //Se obtiene el producto a crear y el usuario
     const product = req.body;
     product.thumbnail = req.file.filename;
-    const { user } = req.session;
+    const user = req.user;
     try {
       //Si el usuario que creó el producto es "Premium", se asigna su mail al creador del producto. Caso contrario, queda "Admin" por defecto
       if (user.role === "Premium") {
@@ -61,7 +62,7 @@ productRouter.post(
 );
 
 //Actualizar un producto por su ID
-productRouter.put("/:pid", isPremiumOrAdmin, async (req, res) => {
+productRouter.put("/:pid", verifyToken, isPremiumOrAdmin, async (req, res) => {
   try {
     console.log(req.body);
     res
@@ -74,25 +75,30 @@ productRouter.put("/:pid", isPremiumOrAdmin, async (req, res) => {
 });
 
 //Eliminar un producto por su ID
-productRouter.delete("/:pid", isPremiumOrAdmin, async (req, res) => {
-  const { user } = req.session;
-  const product = await productController.getById(req.params.pid);
-  try {
-    //Se valida que quien elimina el producto sea el "Admin" o que sea el mismo creador de ese producto
-    if (
-      user.role === "Admin" ||
-      (user.role === "Premium" && user.email === product.owner)
-    ) {
-      res.status(200).send(await productController.delete(req.params.pid));
-      //Uso de socket para los productos en tiempo real
-      io.emit("deletedProd", req.params.pid);
-    } else {
-      res.status(403).send("No tiene permisos para eliminar este producto");
+productRouter.delete(
+  "/:pid",
+  verifyToken,
+  isPremiumOrAdmin,
+  async (req, res) => {
+    const user = req.user;
+    const product = await productController.getById(req.params.pid);
+    try {
+      //Se valida que quien elimina el producto sea el "Admin" o que sea el mismo creador de ese producto
+      if (
+        user.role === "Admin" ||
+        (user.role === "Premium" && user.email === product.owner)
+      ) {
+        res.status(200).send(await productController.delete(req.params.pid));
+        //Uso de socket para los productos en tiempo real
+        io.emit("deletedProd", req.params.pid);
+      } else {
+        res.status(403).send("No tiene permisos para eliminar este producto");
+      }
+    } catch (err) {
+      req.logger.error(`Error al eliminar el producto por ID: ${err}`);
+      res.status(401).send(`Error al eliminar el producto por ID: ${err}`);
     }
-  } catch (err) {
-    req.logger.error(`Error al eliminar el producto por ID: ${err}`);
-    res.status(401).send(`Error al eliminar el producto por ID: ${err}`);
   }
-});
+);
 
 export default productRouter;
