@@ -10,20 +10,21 @@ import {
   isUser,
   isUserOrPremium,
 } from "../middlewares/auth.middleware.js";
+import { verifyToken } from "../middlewares/jwt.middleware.js";
 
 //Creación de router de vistas
 const viewsRouter = Router();
 
-viewsRouter.get("/", isGuest, (req, res) => {
+viewsRouter.get("/", verifyToken, isGuest, (req, res) => {
   res.render("login", {
     title: "Iniciar sesión",
   });
 });
 
 //Vista de productos (usando filtros y paginación)
-viewsRouter.get("/products", isAuth, async (req, res) => {
+viewsRouter.get("/products", verifyToken, isAuth, async (req, res) => {
   //Obtención del usuario
-  const { user } = req.session;
+  const user = req.user;
   delete user.password;
   //Configuración de filtros
   const { limit, page, category, availability, sort } = req.query;
@@ -38,6 +39,7 @@ viewsRouter.get("/products", isAuth, async (req, res) => {
   prodList.category = category;
   prodList.availability = availability;
   prodList.sort = sort;
+  
   //Configuración para paginación
   prodList.prevLink = prodList.hasPrevPage
     ? `products?page=${prodList.prevPage}`

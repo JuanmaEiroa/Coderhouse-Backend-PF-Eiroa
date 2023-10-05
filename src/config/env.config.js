@@ -1,9 +1,7 @@
 //Importación de dotenv y el program definido con Commander
-//Importación de dotenv y el program definido con Commander
 import dotenv from "dotenv";
 import program from "./commander.config.js";
 
-//Definición de constantes según los parámetros usados en consola
 //Definición de constantes según los parámetros usados en consola
 const port = program.opts().p;
 const persistence = program.opts().pers;
@@ -25,4 +23,6 @@ export const appConfig = {
   githubSecret: process.env.GITHUB_SECRET,
   gmailUser: process.env.GMAIL_USER,
   gmailAppPass: process.env.GMAIL_APP_PASS,
+  cookieSecret: process.env.COOKIE_SECRET,
+  jwtSecret: process.env.JWT_SECRET
 };

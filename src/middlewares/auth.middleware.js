@@ -1,7 +1,7 @@
 //FUNCIONES PARA AUTENTICACIÓN DE USUARIO
 //Chequeo si el usuario está autenticado para acceder a la aplicación. Caso contrario, se envía al login.
 export function isAuth(req, res, next) {
-  if (req.session.user) {
+  if (req.user) {
     next();
   } else {
     res.redirect("/");
@@ -10,7 +10,7 @@ export function isAuth(req, res, next) {
 
 //Chequeo si el usuario no está autenticado para enviarlo al login. Caso contrario, accede a la aplicación.
 export function isGuest(req, res, next) {
-  if (!req.session.user) {
+  if (!req.user) {
     next();
   } else {
     res.redirect("/products");
