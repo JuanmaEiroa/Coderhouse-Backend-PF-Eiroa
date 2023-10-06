@@ -68,7 +68,6 @@ app.use(
 initializePassport();
 app.use(passport.initialize());
 
-
 //Configuración de DB
 mongoose.connect(appConfig.mongoUrl, { dbName: appConfig.mongoDbName });
 
