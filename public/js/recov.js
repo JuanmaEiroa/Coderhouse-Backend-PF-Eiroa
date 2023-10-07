@@ -28,6 +28,7 @@ function recoverPass() {
   const email = document.getElementById("email").value;
   const newPass = document.getElementById("newPassword").value;
   const repeatNewPass = document.getElementById("repeatNewPassword").value;
+  const token = window.location.search.split("=")[1]
   if (newPass === "" || repeatNewPass === "") {
     console.log("Campos incompletos")
     Swal.fire({
@@ -49,7 +50,7 @@ function recoverPass() {
       timer: 4000,
     });
   } else {
-    fetch(`/api/passrecov/newpass`, {
+    fetch(`/api/passrecov/newpass?token=${token}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

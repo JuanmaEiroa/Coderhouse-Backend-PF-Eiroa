@@ -18,7 +18,7 @@ passRouter.post("/", async (req,res)=>{
 //Actualización de la contraseña
 passRouter.post("/newpass", async (req,res)=>{
     try {
-        res.status(201).send(await passRecovController.updatePass(req.body.email, req.body.newPass, req.body.repeatNewPass));
+        res.status(201).send(await passRecovController.updatePass(req.query.token, req.body.newPass, req.body.repeatNewPass));
     } catch (err) {
         req.logger.fatal(`Error interno al restablecer la contraseña: ${err}`);
         res.status(500).send(`Error interno al restablecer la contraseña: ${err}`)
