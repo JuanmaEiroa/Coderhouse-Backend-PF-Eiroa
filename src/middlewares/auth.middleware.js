@@ -1,4 +1,7 @@
 //FUNCIONES PARA AUTENTICACIÓN DE USUARIO
+
+import userController from "../controllers/user.controller.js";
+
 //Chequeo si el usuario está autenticado para acceder a la aplicación. Caso contrario, se envía al login.
 export function isAuth(req, res, next) {
   if (req.user) {
@@ -17,59 +20,15 @@ export function isGuest(req, res, next) {
   }
 }
 
-//FUNCION PARA VALIDACION DE ENDPOINTS
-//Admin
-export function isAdmin(req, res, next) {
-  const user = req.user;
-  if (user && user.role === "Admin") {
-    next();
-  } else {
-    res
-      .status(403)
-      .json({ message: "Acceso no permitido. Se requiere ser Admin" });
-  }
-}
-
-//Premium
-export function isPremium(req, res, next) {
-  const user = req.user;
-  if (user && user.role === "Premium") {
-    next();
-  } else {
-    res
-    .status(403)
-    .json({ message: "Acceso no permitido. Se requiere ser Premium" });
-  }
-}
-
-//User
-export function isUser(req, res, next) {
-  const user = req.user;
-  if (user && user.role === "User") {
-    next();
-  } else {
-    res
-      .status(403)
-      .json({ message: "Acceso no permitido. Se requiere ser User" });
-  }
-}
-
-//Premium/Admin
-export function isPremiumOrAdmin (req,res,next) {
-  const user = req.user;
-  if (user.role === "Premium" || user.role === "Admin") {
-    next()
-  } else {
-    res.status(403).json({message: "Acceso no permitido. Se requiere ser Premium o Admin"})
-  }
-}
-
-//User/Premium
-export function isUserOrPremium (req,res,next) {
-  const user = req.user;
-  if (user.role === "User" || user.role === "Premium") {
-    next()
-  } else {
-    res.status(403).json({message: "Acceso no permitido. Se requiere ser User o Premium"})
+//AUTORIZACIÓN DE USUARIO
+//Factory de Middewares para asignación de roles
+export function authMiddleware(roles) {
+  return async (req,res,next) => {
+     const user = await userController.getById(req.user._id)
+      if (user && roles.includes(user.role)) {
+        next();
+      } else {
+        res.status(403).send({message: `Aceso no permitido. Se requiere ser ${roles.join(", ")}`})
+      }
   }
 }

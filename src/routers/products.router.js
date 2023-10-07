@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { io } from "../utils/server.util.js";
 import productController from "../controllers/product.controller.js";
-import { isPremiumOrAdmin } from "../middlewares/auth.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 import CustomErrors from "../utils/errors/CustomErrors.js";
 import { generateProdErrorInfo } from "../utils/errors/errorInfo.js";
 import ErrorIndex from "../utils/errors/ErrorIndex.js";
@@ -34,8 +34,9 @@ productRouter.get("/:pid", async (req, res) => {
 
 //Crear un nuevo producto (sólo siendo Admin o Premium) - CON MULTER
 productRouter.post(
-  "/", verifyToken,
-  isPremiumOrAdmin,
+  "/",
+  verifyToken,
+  authMiddleware(["Premium", "Admin"]),
   multerGenerator("/public/data/images/products", ".jpg").single("thumbnail"),
   async (req, res) => {
     //Se obtiene el producto a crear y el usuario
@@ -62,7 +63,7 @@ productRouter.post(
 );
 
 //Actualizar un producto por su ID
-productRouter.put("/:pid", verifyToken, isPremiumOrAdmin, async (req, res) => {
+productRouter.put("/:pid", verifyToken, authMiddleware(["Premium", "Admin"]), async (req, res) => {
   try {
     console.log(req.body);
     res
@@ -78,7 +79,7 @@ productRouter.put("/:pid", verifyToken, isPremiumOrAdmin, async (req, res) => {
 productRouter.delete(
   "/:pid",
   verifyToken,
-  isPremiumOrAdmin,
+  authMiddleware(["Premium", "Admin"]),
   async (req, res) => {
     const user = req.user;
     const product = await productController.getById(req.params.pid);

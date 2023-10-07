@@ -1,7 +1,7 @@
 //Importaciones
 import { Router } from "express";
 import cartController from "../controllers/cart.controller.js";
-import { isUserOrPremium } from "../middlewares/auth.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 import purchaseController from "../controllers/purchase.controller.js";
 import productController from "../controllers/product.controller.js";
 import { verifyToken } from "../middlewares/jwt.middleware.js";
@@ -60,7 +60,7 @@ cartRouter.delete("/:cid", async (req, res) => {
 });
 
 //Agregar un producto al carrito por ID
-cartRouter.post("/:cid/product/:pid", verifyToken, isUserOrPremium, async (req, res) => {
+cartRouter.post("/:cid/product/:pid", verifyToken, authMiddleware(["User", "Premium"]), async (req, res) => {
   const user = req.user;
   const product = await productController.getById(req.params.pid)
   try {

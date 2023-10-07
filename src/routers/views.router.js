@@ -7,8 +7,7 @@ import userController from "../controllers/user.controller.js";
 import {
   isAuth,
   isGuest,
-  isUser,
-  isUserOrPremium,
+  authMiddleware,
 } from "../middlewares/auth.middleware.js";
 import { verifyToken } from "../middlewares/jwt.middleware.js";
 
@@ -67,9 +66,9 @@ viewsRouter.get("/realtimeproducts", verifyToken, isAuth, async (req, res) => {
 });
 
 //Vista del chat
-viewsRouter.get("/chat", verifyToken, isAuth, isUser, async (req, res) => {
+viewsRouter.get("/chat", verifyToken, isAuth, authMiddleware(["User"]), async (req, res) => {
   const renderMessages = await messageController.get();
-  const user = req.user;
+  const user = await userController.getById(req.user._id)
   res.render("chat", { title: "CoderChat", renderMessages, user });
 });
 
@@ -95,7 +94,7 @@ viewsRouter.get("/loginerror", (req, res) => {
 });
 
 //Vista de carrito actual y datos del usuario
-viewsRouter.get("/current", verifyToken, isAuth, isUserOrPremium, async (req, res) => {
+viewsRouter.get("/current", verifyToken, isAuth, authMiddleware(["User", "Premium"]), async (req, res) => {
   const user = req.user;
   const cart = await cartController.getById(user.cart);
   const cartEmpty = cart.products.length < 1 ? true : false;

@@ -46,7 +46,6 @@ userRouter.post(
           .send({ status: "error", error: "Credenciales inválidas" });
       }
       const user = req.user;
-      console.log(user)
       delete user.password;
       req.logger.debug(`Asignado usuario a request: ${user}`)
       let token = generateToken({ user });
