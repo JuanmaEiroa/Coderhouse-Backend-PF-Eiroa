@@ -31,4 +31,9 @@ export default class UserMongoDAO {
   async update(uid, user) {
     return await this.collection.findByIdAndUpdate(uid, user);
   }
+
+  //Eliminar un usuario por ID
+  async delete(uid) {
+    return await this.collection.findByIdAndDelete(uid);
+  }
 }

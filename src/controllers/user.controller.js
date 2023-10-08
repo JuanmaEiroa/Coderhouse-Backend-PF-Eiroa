@@ -60,6 +60,11 @@ class UserController {
     await this.service.update(uid, user);
     return user
   }
+
+  //Eliminar usuario por su ID
+  async delete(uid) {
+    return await this.service.delete(uid)
+  }
 }
 
 const userController = new UserController();

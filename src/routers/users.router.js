@@ -4,6 +4,8 @@ import passport from "passport";
 import userController from "../controllers/user.controller.js";
 import { multerGenerator } from "../middlewares/multer.middleware.js";
 import { generateToken, verifyToken } from "../middlewares/jwt.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import cartController from "../controllers/cart.controller.js";
 
 //Creación del router de usuarios
 const userRouter = Router();
@@ -156,7 +158,7 @@ userRouter.post(
       req.logger.info("Archivos subidos correctamente!");
       res.status(201).send("Archivos subidos correctamente!");
     } catch (error) {
-      req.logger.error(`Error interno al subir documentos: ${err}`);
+      req.logger.fatal(`Error interno al subir documentos: ${err}`);
       res.status(500).send(`Error interno al subir documentos: ${err}`);
     }
   }
@@ -173,13 +175,38 @@ userRouter.post(
       await userController.update(req.params.uid, user);
       req.logger.info("Imagen de perfil actualizada!");
       res.status(201).send("Imagen de perfil actualizada!");
-    } catch (error) {
-      req.logger.error(`Error interno al actualizar la foto de perfil: ${err}`);
+    } catch (err) {
+      req.logger.fatal(`Error interno al actualizar la foto de perfil: ${err}`);
       res
         .status(500)
         .send(`Error interno al actualizar la foto de perfil: ${err}`);
     }
   }
 );
+
+//Eliminación de usuario por inactividad
+userRouter.delete(
+  "/:uid", verifyToken, authMiddleware(["User", "Premium"]), async (req, res) => {
+    try {
+      //Se obtiene el usuario y se verifica el tiempo desde su última conexión expresado en minutos
+      const userToDelete = await userController.getById(req.params.uid);
+      const timeFromLastConnect = (Date.now() - userToDelete.last_connection) / 60000;
+      if(timeFromLastConnect <= 30){
+        req.logger.error(`No puede eliminarse el usuario por no haber cumplido el tiempo de inactividad`)
+        res.status(204).send(`No puede eliminarse el usuario por no haber cumplido el tiempo de inactividad`)
+      } else {
+        await cartController.delete(userToDelete.cart);
+        await userController.delete(userToDelete._id)
+        req.logger.info(`Usuario eliminado: ${userToDelete._id}`)
+        res.status(200).send(`Tiempo desde la última conexión: ${timeFromLastConnect}`)
+      }
+    } catch (err) {
+      req.logger.fatal(`Error interno al eliminar usuario: ${err}`);
+      res
+        .status(500)
+        .send(`Error interno al eliminar usuario: ${err}`);
+    }
+  }
+)
 
 export default userRouter;

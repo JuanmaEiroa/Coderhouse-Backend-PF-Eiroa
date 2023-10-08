@@ -29,6 +29,11 @@ export default class CartRepository {
     return await this.dao.update(cid, cart);
   }
 
+  //Eliminar un carrito por su ID
+  async delete(cid) {
+    return await this.dao.delete(cid)
+  }
+
   //Agregar producto al carrito por su ID
   async addProdtoCart(cid, pid) {
     return await this.dao.addProdtoCart(cid, pid);

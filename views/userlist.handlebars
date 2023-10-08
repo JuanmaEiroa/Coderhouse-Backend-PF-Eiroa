@@ -20,7 +20,7 @@
 </nav>
 <h1>Listado de Usuarios - Panel de Administrador</h1>
 <br />
-<div>
+<div class="userTableCont">
   <table class="userTable">
     <th>Nombre y Apellido</th>
     <th>Email</th>
@@ -33,10 +33,11 @@
         <td>{{this.email}}</td>
         <td>{{this.role}}</td>
         <td>{{this.last_connection}}</td>
-        <td><button>Cambiar Rol</button><button>Eliminar Usuario</button></td>
+        <td><button>Cambiar Rol</button><button onclick="deleteUser('{{this.id}}')">Eliminar Usuario</button></td>
       </tr>
     {{/each}}
   </table>
   <br />
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/admin.js"></script>

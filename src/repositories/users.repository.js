@@ -42,4 +42,9 @@ export default class UserRepository {
   async update(uid, user) {
     return await this.dao.update(uid, user);
   }
+
+  //Eliminar un usuario por su ID
+  async delete(uid) {
+    return await this.dao.delete(uid)
+  }
 }

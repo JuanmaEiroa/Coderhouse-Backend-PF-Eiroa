@@ -27,6 +27,11 @@ class CartController {
     return await this.service.update(cid, cart);
   }
 
+  //Eliminar carrito por su ID
+  async delete(cid){
+    return await this.service.delete(cid)
+  }
+
   //Agregar producto a carrito por id
   async addProdtoCart(cid, pid) {
     return await this.service.addProdtoCart(cid, pid);

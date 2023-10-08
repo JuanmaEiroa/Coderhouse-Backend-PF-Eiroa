@@ -320,3 +320,10 @@ td img {
   height: 40px;
   width: 300px;
 }
+
+/* INICIO CSS USERLIST */
+
+.userTableCont {
+  margin: auto;
+  width: 60%;
+}
