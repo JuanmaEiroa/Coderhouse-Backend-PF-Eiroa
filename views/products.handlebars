@@ -12,8 +12,9 @@
   </p>
   <input type="hidden" id="cartId" value="{{user.cart}}" />
   <a href="/current"><button class="navBtn">Mi Carrito</button></a>
-  <a href="/api/users/premium/{{user.id}}"><button class="navBtn">Cambiar Rol</button></a>
+  <a href="/api/users/premium/{{user._id}}"><button class="navBtn">Cambiar Rol</button></a>
   <a href="/chat"><button class="navBtn">Chat</button></a>
+  <a href="/userlist"><button class="navBtn">Panel de Usuarios</button></a>
   <form action="/api/users/logout" method="post">
     <button type="submit">Cerrar sesión</button>
   </form>

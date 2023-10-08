@@ -76,7 +76,7 @@ h4 {
   width: 80%;
 }
 
-.productTable {
+.productTable, .userTable {
   border: 2px black solid;
   text-align: center;
   background-color: aliceblue;

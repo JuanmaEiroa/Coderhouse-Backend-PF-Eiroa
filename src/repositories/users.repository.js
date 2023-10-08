@@ -9,7 +9,10 @@ export default class UserRepository {
 
   //Obtener todos los usuarios
   async get() {
-    return await this.dao.get();
+    const users = await this.dao.get();
+    const usersDTO = users.map((user) => new UserDTO(user));
+    console.log(usersDTO)
+    return usersDTO;
   }
 
   //Obtener por E-mail
@@ -17,11 +20,9 @@ export default class UserRepository {
     return await this.dao.getByEmail(email);
   }
 
-  //Obtener por ID (usando DTO)
+  //Obtener por ID
   async getById(id) {
-    const user = await this.dao.getById(id);
-    const userDTO = new UserDTO(user);
-    return userDTO;
+    return await this.dao.getById(id);
   }
 
   //Crear un nuevo usuario (realizando validaciones de campos)

@@ -66,11 +66,17 @@ viewsRouter.get("/realtimeproducts", verifyToken, isAuth, async (req, res) => {
 });
 
 //Vista del chat
-viewsRouter.get("/chat", verifyToken, isAuth, authMiddleware(["User"]), async (req, res) => {
-  const renderMessages = await messageController.get();
-  const user = await userController.getById(req.user._id)
-  res.render("chat", { title: "CoderChat", renderMessages, user });
-});
+viewsRouter.get(
+  "/chat",
+  verifyToken,
+  isAuth,
+  authMiddleware(["User"]),
+  async (req, res) => {
+    const renderMessages = await messageController.get();
+    const user = await userController.getById(req.user._id);
+    res.render("chat", { title: "CoderChat", renderMessages, user });
+  }
+);
 
 //Vista de registro
 viewsRouter.get("/register", isGuest, (req, res) => {
@@ -94,18 +100,24 @@ viewsRouter.get("/loginerror", (req, res) => {
 });
 
 //Vista de carrito actual y datos del usuario
-viewsRouter.get("/current", verifyToken, isAuth, authMiddleware(["User", "Premium"]), async (req, res) => {
-  const user = req.user;
-  const cart = await cartController.getById(user.cart);
-  const cartEmpty = cart.products.length < 1 ? true : false;
-  const userToShow = await userController.getById(user._id);
-  res.render("current", {
-    title: "Carrito de Compras",
-    userToShow,
-    cart,
-    cartEmpty,
-  });
-});
+viewsRouter.get(
+  "/current",
+  verifyToken,
+  isAuth,
+  authMiddleware(["User", "Premium"]),
+  async (req, res) => {
+    const user = req.user;
+    const cart = await cartController.getById(user.cart);
+    const cartEmpty = cart.products.length < 1 ? true : false;
+    const userToShow = await userController.getById(user._id);
+    res.render("current", {
+      title: "Carrito de Compras",
+      userToShow,
+      cart,
+      cartEmpty,
+    });
+  }
+);
 
 //Vista de finalización de compra
 viewsRouter.get("/purchase", verifyToken, isAuth, async (req, res) => {
@@ -130,5 +142,25 @@ viewsRouter.get("/newpass", isGuest, async (req, res) => {
     title: "Restablecer contraseña",
   });
 });
+
+//Vista de lista de usuarios (acceso para Admin)
+viewsRouter.get(
+  "/userlist",  verifyToken, isAuth,
+  authMiddleware(["User", "Premium"]),
+  async (req, res) => {
+    try {
+      const userList = await userController.get();
+      const user = await userController.getById(req.user._id);
+      res.render("userlist", {
+        title: "Listado de usuarios - Acceso de Administrador",
+        userList,
+        user
+      });
+    } catch (err) {
+      req.logger.fatal(`Error interno al acceder al panel de usuarios: ${err}`)
+      res.status(500).send(`Error interno al acceder al panel de usuarios: ${err}`)
+    }
+  }
+);
 
 export default viewsRouter;

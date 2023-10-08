@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
 
 //Uso de pre para popular el carrito de cada usuario
 userSchema.pre("find", function () {
-  this.populate("carts.cart");
+  this.populate("cart");
 });
 
 const userModel = mongoose.model("users", userSchema);

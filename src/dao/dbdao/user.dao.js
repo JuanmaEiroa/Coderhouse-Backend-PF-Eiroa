@@ -9,7 +9,7 @@ export default class UserMongoDAO {
 
   //Obtener todos los usuarios
   async get() {
-    return await this.collection.find();
+    return await this.collection.find().lean();
   }
 
   //Obtener por E-Mail

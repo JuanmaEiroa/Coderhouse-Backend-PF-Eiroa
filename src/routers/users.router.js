@@ -8,6 +8,15 @@ import { generateToken, verifyToken } from "../middlewares/jwt.middleware.js";
 //Creación del router de usuarios
 const userRouter = Router();
 
+//Obtención de todos los usuarios
+userRouter.get("/", async(req, res)=>{
+  try {
+    res.status(200).send(await userController.get());
+  } catch (err) {
+    res.status(500).send(`Error interno del servidor al obtener los usuarios: ${err}`)
+  }
+})
+
 //Creación de un nuevo usuario por medio del registro con passport
 userRouter.post(
   "/",

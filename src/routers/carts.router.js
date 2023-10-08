@@ -5,6 +5,7 @@ import { authMiddleware } from "../middlewares/auth.middleware.js";
 import purchaseController from "../controllers/purchase.controller.js";
 import productController from "../controllers/product.controller.js";
 import { verifyToken } from "../middlewares/jwt.middleware.js";
+import userController from "../controllers/user.controller.js";
 
 //Creación del router de carritos
 const cartRouter = Router();
@@ -61,7 +62,7 @@ cartRouter.delete("/:cid", async (req, res) => {
 
 //Agregar un producto al carrito por ID
 cartRouter.post("/:cid/product/:pid", verifyToken, authMiddleware(["User", "Premium"]), async (req, res) => {
-  const user = req.user;
+  const user = await userController.getById(req.user._id)
   const product = await productController.getById(req.params.pid)
   try {
     //Se valida que el usuario sea "User" o que, si es "Premium", el producto NO haya sido creado por el
