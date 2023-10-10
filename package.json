@@ -5,6 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "start": "node src/app.js",
     "devStart": "npx nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "unitTestProductDao": "mocha test/dao/dbdao/products.dao.test.js",
