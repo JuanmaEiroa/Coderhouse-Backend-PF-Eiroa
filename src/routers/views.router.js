@@ -30,7 +30,6 @@ viewsRouter.get("/products", verifyToken, isAuth, async (req, res) => {
   } else {
     user = await userController.getById(req.user._id);
     req.user = user;
-    console.log(user)
     delete user.password;
   }
   //Configuración de filtros

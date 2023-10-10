@@ -65,7 +65,6 @@ productRouter.post(
 //Actualizar un producto por su ID
 productRouter.put("/:pid", verifyToken, authMiddleware(["Premium", "Admin"]), async (req, res) => {
   try {
-    console.log(req.body);
     res
       .status(201)
       .send(await productController.update(req.params.pid, req.body));

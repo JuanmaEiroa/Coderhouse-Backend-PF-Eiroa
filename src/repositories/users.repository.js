@@ -11,7 +11,6 @@ export default class UserRepository {
   async get() {
     const users = await this.dao.get();
     const usersDTO = users.map((user) => new UserDTO(user));
-    console.log(usersDTO)
     return usersDTO;
   }
 
