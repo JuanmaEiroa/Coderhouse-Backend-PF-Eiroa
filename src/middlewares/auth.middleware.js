@@ -23,12 +23,21 @@ export function isGuest(req, res, next) {
 //AUTORIZACIÓN DE USUARIO
 //Factory de Middewares para asignación de roles
 export function authMiddleware(roles) {
-  return async (req,res,next) => {
-     const user = await userController.getById(req.user._id)
-      if (user && roles.includes(user.role)) {
-        next();
-      } else {
-        res.status(403).send({message: `Aceso no permitido. Se requiere ser ${roles.join(", ")}`})
-      }
-  }
+  return async (req, res, next) => {
+    let user;
+    if (req.user.role !== "Admin") {
+      user = await userController.getById(req.user._id);
+    } else {
+      user = req.user;
+    }
+    if (user && roles.includes(user.role)) {
+      next();
+    } else {
+      res
+        .status(403)
+        .send({
+          message: `Aceso no permitido. Se requiere ser ${roles.join(", ")}`,
+        });
+    }
+  };
 }

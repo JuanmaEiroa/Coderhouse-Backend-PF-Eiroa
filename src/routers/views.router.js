@@ -23,9 +23,16 @@ viewsRouter.get("/", verifyToken, isGuest, (req, res) => {
 //Vista de productos (usando filtros y paginación)
 viewsRouter.get("/products", verifyToken, isAuth, async (req, res) => {
   //Obtención del usuario
-  const user = await userController.getById(req.user._id);
-  req.user = user;
-  delete user.password;
+  let user;
+  if(req.user.role === "Admin") {
+    user = req.user
+    delete user.password
+  } else {
+    user = await userController.getById(req.user._id);
+    req.user = user;
+    console.log(user)
+    delete user.password;
+  }
   //Configuración de filtros
   const { limit, page, category, availability, sort } = req.query;
   const prodList = await productController.get(
@@ -146,11 +153,11 @@ viewsRouter.get("/newpass", isGuest, async (req, res) => {
 //Vista de lista de usuarios (acceso para Admin)
 viewsRouter.get(
   "/userlist",  verifyToken, isAuth,
-  authMiddleware(["User", "Premium"]),
+  authMiddleware(["Admin"]),
   async (req, res) => {
     try {
       const userList = await userController.get();
-      const user = await userController.getById(req.user._id);
+      const user = req.user;
       res.render("userlist", {
         title: "Listado de usuarios - Acceso de Administrador",
         userList,

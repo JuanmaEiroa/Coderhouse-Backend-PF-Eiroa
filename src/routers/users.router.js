@@ -101,10 +101,12 @@ userRouter.get("/loginerror", (req, res) => {
 //Cierre de sesión
 userRouter.post("/logout", verifyToken, async (req, res) => {
   try {
-    const uid = req.user._id;
-    const user = await userController.getById(uid);
-    user.last_connection = new Date();
-    await userController.update(uid, user);
+    if(req.user.role !== "Admin") {
+      const uid = req.user._id;
+      const user = await userController.getById(uid);
+      user.last_connection = new Date();
+      await userController.update(uid, user);
+    }
     res.clearCookie("jwToken");
     res.status(201).redirect("/");
   } catch (err) {
@@ -186,7 +188,7 @@ userRouter.post(
 
 //Eliminación de usuario por inactividad
 userRouter.delete(
-  "/:uid", verifyToken, authMiddleware(["User", "Premium"]), async (req, res) => {
+  "/:uid", verifyToken, authMiddleware(["Admin"]), async (req, res) => {
     try {
       //Se obtiene el usuario y se verifica el tiempo desde su última conexión expresado en minutos
       const userToDelete = await userController.getById(req.params.uid);
