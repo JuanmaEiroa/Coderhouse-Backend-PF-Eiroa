@@ -1,5 +1,7 @@
 //Importaciones
 import { userService } from "../repositories/repoIndex.js";
+import { appConfig } from "../config/env.config.js";
+import { mailerTransport } from "../utils/mailer.js";
 
 //Creación del controlador de usuarios
 class UserController {
@@ -63,6 +65,22 @@ class UserController {
 
   //Eliminar usuario por su ID
   async delete(uid) {
+    const userToDelete = await userController.getById(uid)
+    //Generación de mail para indicar que se eliminó el usuario
+    let mail = await mailerTransport.sendMail({
+      from: `CoderCommerce ${appConfig.gmailUser}`,
+      to: userToDelete.email,
+      subject: "Eliminación de usuario por inactividad",
+      html: `
+                    <div>
+                    <h1>Su usuario ha sido eliminado por inactividad</h1>
+                    <p>Lamentamos informarle que su usuario ha sido eliminado de nuestra plataforma debido a haber superado el período de inactividad de 2 días.</p>
+                    <p>Lo invitamos a crearse una cuenta nuevamente para poder seguir utilizando nuestro servicio de e-commerce</p>
+                    <a href="http://localhost:8080/"><button>Ingresar a la página</button></a>
+                    </div>
+              `,
+      attachments: [],
+    });
     return await this.service.delete(uid)
   }
 }

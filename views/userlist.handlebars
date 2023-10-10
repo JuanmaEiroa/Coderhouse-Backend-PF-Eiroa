@@ -32,7 +32,7 @@
         <td>{{this.email}}</td>
         <td>{{this.role}}</td>
         <td>{{this.last_connection}}</td>
-        <td><button>Cambiar Rol</button><button onclick="deleteUser('{{this.id}}')">Eliminar Usuario</button></td>
+        <td><a href="/api/users/premium/{{this.id}}"><button>Cambiar Rol</button></a><button onclick="deleteUser('{{this.id}}')">Eliminar Usuario</button></td>
       </tr>
     {{/each}}
   </table>

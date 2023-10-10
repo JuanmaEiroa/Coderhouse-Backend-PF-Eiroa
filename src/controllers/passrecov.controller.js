@@ -1,19 +1,9 @@
 //Importaciones
-import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import { appConfig } from "../config/env.config.js";
 import { userService } from "../repositories/repoIndex.js";
 import { encryptPassword, comparePassword } from "../utils/encrypt.util.js";
-
-//Creación del transporte para envío de mails con Nodemailer
-const transport = nodemailer.createTransport({
-  service: "gmail",
-  port: 587,
-  auth: {
-    user: appConfig.gmailUser,
-    pass: appConfig.gmailAppPass,
-  },
-});
+import { mailerTransport } from "../utils/mailer.js";
 
 //Creación del controlador para recuperación de contraseñas
 class PassRecovController {
@@ -23,7 +13,7 @@ class PassRecovController {
       //Generación de token para recuperación de contraseña
       const token = jwt.sign({email}, appConfig.jwtSecret, {expiresIn: "1h"} )
       //Definición del mail a enviar por Nodemailer (asunto, cuerpo, direcciones)
-      let mail = await transport.sendMail({
+      let mail = await mailerTransport.sendMail({
         from: `CoderCommerce ${appConfig.gmailUser}`,
         to: email,
         subject: "Restablecimiento de contraseña",

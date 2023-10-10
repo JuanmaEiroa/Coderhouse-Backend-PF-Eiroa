@@ -5,18 +5,8 @@ import {
   ticketService,
   userService,
 } from "../repositories/repoIndex.js";
-import nodemailer from "nodemailer";
 import { appConfig } from "../config/env.config.js";
-
-//Definición de constante transport para envío de mail con ticket
-const transport = nodemailer.createTransport({
-  service: "gmail",
-  port: 587,
-  auth: {
-    user: appConfig.gmailUser,
-    pass: appConfig.gmailAppPass,
-  },
-});
+import { mailerTransport } from "../utils/mailer.js";
 
 //Creación del controlador de compras
 class PurchaseController {
@@ -82,7 +72,7 @@ class PurchaseController {
       });
 
       //GENERACIÓN DE MAIL PARA ENVÍO DE TICKET
-      let mail = await transport.sendMail({
+      let mail = await mailerTransport.sendMail({
         from: `CoderCommerce ${appConfig.gmailUser}`,
         to: purchaseUser.email,
         subject: "Compra Exitosa!",

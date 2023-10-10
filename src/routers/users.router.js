@@ -11,13 +11,15 @@ import cartController from "../controllers/cart.controller.js";
 const userRouter = Router();
 
 //Obtención de todos los usuarios
-userRouter.get("/", async(req, res)=>{
+userRouter.get("/", async (req, res) => {
   try {
     res.status(200).send(await userController.get());
   } catch (err) {
-    res.status(500).send(`Error interno del servidor al obtener los usuarios: ${err}`)
+    res
+      .status(500)
+      .send(`Error interno del servidor al obtener los usuarios: ${err}`);
   }
-})
+});
 
 //Creación de un nuevo usuario por medio del registro con passport
 userRouter.post(
@@ -58,10 +60,10 @@ userRouter.post(
       }
       const user = req.user;
       delete user.password;
-      req.logger.debug(`Asignado usuario a request: ${user}`)
+      req.logger.debug(`Asignado usuario a request: ${user}`);
       let token = generateToken({ user });
-      res.cookie("jwToken", token, { httpOnly: true, });
-      req.logger.debug(`Token generado y almacenado en cookie: ${req.cookies}`)
+      res.cookie("jwToken", token, { httpOnly: true });
+      req.logger.debug(`Token generado y almacenado en cookie: ${req.cookies}`);
       res.redirect("/");
     } catch (err) {
       req.logger.error(`Error interno de ruteo al iniciar sesión: ${err}`);
@@ -101,7 +103,7 @@ userRouter.get("/loginerror", (req, res) => {
 //Cierre de sesión
 userRouter.post("/logout", verifyToken, async (req, res) => {
   try {
-    if(req.user.role !== "Admin") {
+    if (req.user.role !== "Admin") {
       const uid = req.user._id;
       const user = await userController.getById(uid);
       user.last_connection = new Date();
@@ -120,7 +122,7 @@ userRouter.get("/premium/:uid", verifyToken, async (req, res) => {
   try {
     const user = await userController.changeRole(req.params.uid);
     req.user.role = user.role;
-    res.redirect("/");
+    res.redirect("back");
   } catch (err) {
     req.logger.error(`Error al cambiar el rol del usuario: ${err}`);
     res.status(500).send(`Error al cambiar el rol del usuario: ${err}`);
@@ -129,7 +131,8 @@ userRouter.get("/premium/:uid", verifyToken, async (req, res) => {
 
 //Carga de documentos con Multer
 userRouter.post(
-  "/:uid/documents", verifyToken,
+  "/:uid/documents",
+  verifyToken,
   multerGenerator("/public/data/documents", ".pdf").fields([
     { name: "idFile", maxCount: 1 },
     { name: "addressCompFile", maxCount: 1 },
@@ -168,7 +171,8 @@ userRouter.post(
 
 //Carga de imagen de perfil con Multer
 userRouter.post(
-  "/:uid/profImg", verifyToken, 
+  "/:uid/profImg",
+  verifyToken,
   multerGenerator("/public/data/images/profiles", ".jpg").single("profImg"),
   async (req, res) => {
     try {
@@ -188,27 +192,37 @@ userRouter.post(
 
 //Eliminación de usuario por inactividad
 userRouter.delete(
-  "/:uid", verifyToken, authMiddleware(["Admin"]), async (req, res) => {
+  "/:uid",
+  verifyToken,
+  authMiddleware(["Admin"]),
+  async (req, res) => {
     try {
       //Se obtiene el usuario y se verifica el tiempo desde su última conexión expresado en minutos
       const userToDelete = await userController.getById(req.params.uid);
-      const timeFromLastConnect = (Date.now() - userToDelete.last_connection) / 60000;
-      if(timeFromLastConnect <= 30){
-        req.logger.error(`No puede eliminarse el usuario por no haber cumplido el tiempo de inactividad`)
-        res.status(204).send(`No puede eliminarse el usuario por no haber cumplido el tiempo de inactividad`)
+      const timeFromLastConnect =
+        (Date.now() - userToDelete.last_connection) / 60000;
+      if (timeFromLastConnect <= 30) {
+        req.logger.error(
+          `No puede eliminarse el usuario por no haber cumplido el tiempo de inactividad`
+        );
+        res
+          .status(204)
+          .send(
+            `No puede eliminarse el usuario por no haber cumplido el tiempo de inactividad`
+          );
       } else {
         await cartController.delete(userToDelete.cart);
-        await userController.delete(userToDelete._id)
-        req.logger.info(`Usuario eliminado: ${userToDelete._id}`)
-        res.status(200).send(`Tiempo desde la última conexión: ${timeFromLastConnect}`)
+        await userController.delete(userToDelete._id);
+        req.logger.info(`Usuario eliminado: ${userToDelete._id}`);
+        res
+          .status(200)
+          .send(`Tiempo desde la última conexión: ${timeFromLastConnect}`);
       }
     } catch (err) {
       req.logger.fatal(`Error interno al eliminar usuario: ${err}`);
-      res
-        .status(500)
-        .send(`Error interno al eliminar usuario: ${err}`);
+      res.status(500).send(`Error interno al eliminar usuario: ${err}`);
     }
   }
-)
+);
 
 export default userRouter;
