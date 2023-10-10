@@ -57,12 +57,14 @@ viewsRouter.get("/products", verifyToken, isAuth, async (req, res) => {
 
   //Validación del rol para mostrar panel de Admin/Premium en la vista
   const isUser = user.role === "User";
+  const isAdmin = user.role === "Admin";
 
   res.render("products", {
     title: "Listado de Productos",
     prodList,
     user,
     isUser,
+    isAdmin
   });
 });
 
