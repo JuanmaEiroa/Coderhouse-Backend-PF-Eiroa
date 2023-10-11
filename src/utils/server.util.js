@@ -10,7 +10,7 @@ const HOST = appConfig.host;
 //Montaje del servidor en express y el socket para permitir exportar el socket a otros módulos.
 const app = express();
 const httpServer = app.listen(PORT, HOST, () => {
-  console.log(`Listening now on port ${PORT}`);
+  console.log(`Listening now on port ${PORT} with host ${HOST}`);
 });
 const io = new Server(httpServer);
 
