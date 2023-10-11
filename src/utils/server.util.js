@@ -4,7 +4,7 @@ import express from "express";
 import { appConfig } from "../config/env.config.js";
 
 //Definición del puerto
-const PORT = appConfig.port;
+const PORT = appConfig.port || 8080;
 const HOST = appConfig.host;
 
 //Montaje del servidor en express y el socket para permitir exportar el socket a otros módulos.
