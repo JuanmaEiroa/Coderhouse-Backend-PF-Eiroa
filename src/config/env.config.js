@@ -6,6 +6,7 @@ import program from "./commander.config.js";
 const port = program.opts().p;
 const persistence = program.opts().pers;
 const environment = program.opts().env;
+const host = program.opts().host;
 
 //Uso de dotenv y exportación de todas las variables de entorno
 dotenv.config({ path: `${process.cwd()}/.env/.env` });
@@ -14,6 +15,7 @@ export const appConfig = {
   port: port,
   persistence: persistence,
   environment: environment,
+  host: host,
   mongoUrl: process.env.MONGO_URL,
   mongoDbName: process.env.MONGO_DBNAME,
   sessionSecret: process.env.SESS_SECRET,
@@ -24,5 +26,5 @@ export const appConfig = {
   gmailUser: process.env.GMAIL_USER,
   gmailAppPass: process.env.GMAIL_APP_PASS,
   cookieSecret: process.env.COOKIE_SECRET,
-  jwtSecret: process.env.JWT_SECRET
+  jwtSecret: process.env.JWT_SECRET,
 };
