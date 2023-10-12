@@ -76,7 +76,9 @@ userRouter.post(
 userRouter.get(
   "/github",
   passport.authenticate("github", { scope: ["user:email"] }),
-  async (req, res) => {}
+  async (req, res) => {
+    console.log(req.user.token)
+  }
 );
 
 userRouter.get(
