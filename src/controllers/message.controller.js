@@ -1,6 +1,5 @@
 //Importaciones
 import MessageMongoDAO from "../dao/dbdao/message.dao.js";
-import { addEnvLogger } from "../middlewares/logger.middleware.js";
 
 //Creación del controlador de mensajes
 class MessageController {
