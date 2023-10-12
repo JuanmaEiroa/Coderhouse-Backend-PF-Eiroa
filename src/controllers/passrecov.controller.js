@@ -8,7 +8,7 @@ import { mailerTransport } from "../utils/mailer.js";
 //Creación del controlador para recuperación de contraseñas
 class PassRecovController {
   //Función para envío de mail
-  async sendMail(email) {
+  async sendMail(email, req) {
     try {
       //Generación de token para recuperación de contraseña
       const token = jwt.sign({email}, appConfig.jwtSecret, {expiresIn: "1h"} )
@@ -26,10 +26,9 @@ class PassRecovController {
                 `,
         attachments: [],
       });
-    } catch (error) {
-      console.log(
-        `Error interno al intentar enviar el correo de recuperación: ${error}`
-      );
+      req.logger.info(`Correo de recuperación enviado`)
+    } catch (err) {
+      req.logger.fatal(`Error interno al intentar enviar el correo de recuperación: ${error}`);
     }
   }
 

@@ -63,7 +63,7 @@ userRouter.post(
       req.logger.debug(`Asignado usuario a request: ${user}`);
       let token = generateToken({ user });
       res.cookie("jwToken", token, { httpOnly: true });
-      req.logger.debug(`Token generado y almacenado en cookie: ${req.cookies}`);
+      req.logger.debug(`Token generado y almacenado en cookie`);
       res.redirect("/");
     } catch (err) {
       req.logger.error(`Error interno de ruteo al iniciar sesión: ${err}`);
@@ -84,7 +84,11 @@ userRouter.get(
   passport.authenticate("github", { failureRedirect: "/login" }),
   async (req, res) => {
     try {
-      res.redirect("/");
+      const user = req.user
+      let token = generateToken({ user });
+      res.cookie("jwToken", token, { httpOnly: true });
+      req.logger.debug(`Token generado y almacenado en cookie`);
+      res.redirect("/")
     } catch (err) {
       req.logger.error(`Error interno al iniciar sesión con GitHub: ${err}`);
       res
