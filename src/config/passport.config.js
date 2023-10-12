@@ -135,8 +135,9 @@ const initializePassport = () => {
         clientID: appConfig.githubClient,
         clientSecret: appConfig.githubSecret,
         callbackURL: "http://localhost:8080/api/users/githubcallback",
+        passReqToCallback: true
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (req, accessToken, refreshToken, profile, done) => {
         try {
           //Se obtiene el usuario usando el email
           let user = await userController.getByEmail(profile._json.email);
@@ -151,10 +152,8 @@ const initializePassport = () => {
               img: profile._json.avatar_url,
             };
             user = await userController.add(newUser);
-            done(null, user);
-          } else {
-            done(null, user);
           }
+          done(null, user);
         } catch (err) {
           done(err, false);
         }
